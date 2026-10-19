@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import StaticPage from "@/components/StaticPage";
+import { metaFor } from "@/lib/meta";
 
-export const metadata: Metadata = { title: "Privacy Policy", description: "Your photos never leave your device. How DetectFaceShape.ai handles photos, camera access and data.", alternates: { canonical: "/privacy/" } };
+export const metadata: Metadata = metaFor("/privacy/");
 
 const body = `**Short version: your photos and camera feed never leave your device. We don't upload, store or see them, and we don't collect face geometry.**
 
@@ -37,5 +38,5 @@ Questions? Email privacy@detectfaceshape.ai.
 _Last updated: October 19, 2026._`;
 
 export default function Privacy() {
-  return <StaticPage title="Privacy Policy" path="/privacy/" body={body} />;
+  return <StaticPage title="Privacy Policy" path="/privacy/" body={body} icon="ShieldCheck" />;
 }

@@ -15,7 +15,7 @@ export default function EmbedQuiz() {
       <p className="embed-credit">
         Face shape quiz by{" "}
         <a href={`${SITE.url}/?utm_source=embed&utm_medium=widget`} target="_blank" rel="noopener">
-          DetectFaceShape.ai: free AI face shape detector
+          Face Shape Detector: free AI face shape tool
         </a>
       </p>
     </>

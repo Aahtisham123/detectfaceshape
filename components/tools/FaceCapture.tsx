@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { getLandmarker, setMode } from "@/lib/face/landmarker";
 import { normalizeFace, type FaceFrame } from "@/lib/face/normalize";
 import { drawOverlay, GUIDES } from "@/lib/face/draw";
+import { Icon } from "@/components/icons";
+import { toast } from "@/lib/toast";
 
 type Raw = { x: number; y: number; z: number }[];
 type Status = "idle" | "loading" | "live" | "analyzing" | "done" | "error";
@@ -52,6 +54,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
     stopCamera();
     setError(msg);
     setStatus("error");
+    toast("error", msg);
   };
 
   /** Runs the landmark model on whatever is drawn on the main canvas. */
@@ -70,6 +73,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       setResult(out);
       onResult?.(out);
       setStatus("done");
+      toast("success", frame.warnings.length ? "Done! See the tips below for a more accurate reading." : "Analysis complete. Your result is ready.");
     } catch (e) {
       console.error(e);
       fail("The face model couldn't run in this browser. Try an up-to-date Chrome, Safari, Edge or Firefox.");
@@ -190,9 +194,10 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
             <p className="stage-tip">Tip: face the camera straight on, hair pulled back, neutral expression, good light.</p>
           </div>
         )}
+        {status === "analyzing" && <div className="scan-line" aria-hidden="true" />}
         {(status === "loading" || status === "analyzing") && (
           <div className="stage-busy" role="status">
-            <span className="spinner" /> {status === "loading" ? "Loading the face model…" : "Measuring your face…"}
+            <span className="spinner" /> {status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…"}
           </div>
         )}
       </div>
@@ -200,27 +205,41 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       <div className="capture-actions">
         {status === "live" ? (
           <>
-            <button className="btn primary" onClick={capture}>Capture &amp; analyze</button>
-            <button className="btn" onClick={reset}>Stop camera</button>
+            <button className="btn primary" onClick={capture}><Icon name="Camera" size={18} /> Capture &amp; analyze</button>
+            <button className="btn" onClick={reset}><Icon name="X" size={18} /> Stop camera</button>
           </>
         ) : status === "done" ? (
-          <button className="btn" onClick={reset}>Try another photo</button>
+          <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> Try another photo</button>
         ) : (
           <>
             <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={status === "loading" || status === "analyzing"}>
-              Upload a photo
+              <Icon name="Upload" size={18} /> Upload a photo
             </button>
             <button className="btn" onClick={startCamera} disabled={status === "loading" || status === "analyzing"}>
-              Use my camera
+              <Icon name="Camera" size={18} /> Use my camera
             </button>
           </>
         )}
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => loadFile(e.target.files?.[0])} />
       </div>
-      <p className="privacy-note">🔒 Your photo never leaves your device. All analysis runs in your browser.</p>
+      <p className="privacy-note"><Icon name="ShieldCheck" size={16} /> Your photo never leaves your device. All analysis runs in your browser.</p>
 
-      {status === "error" && <p className="alert" role="alert">{error}</p>}
-      {status === "done" && result !== null && <div className="result" ref={resultRef}>{render(result, reset)}</div>}
+      {status === "error" && (
+        <div className="alert" role="alert">
+          <Icon name="TriangleAlert" size={22} />
+          <div>
+            <strong>Something went wrong</strong>
+            <p>{error}</p>
+          </div>
+          <button className="btn sm" onClick={reset}><Icon name="RotateCcw" size={16} /> Try again</button>
+        </div>
+      )}
+      {status === "done" && result !== null && (
+        <div className="result" ref={resultRef}>
+          <p className="success-banner"><Icon name="CircleCheck" size={18} /> Analysis complete</p>
+          {render(result, reset)}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,270 @@
+{
+ "/images/hero/face-shape-detector-scan.webp": [
+  600,
+  480
+ ],
+ "/images/face-shapes/face-shapes-chart.webp": [
+  1000,
+  480
+ ],
+ "/images/face-shapes/oval-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/oval.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/round-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/round.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/square-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/square.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/oblong-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/oblong.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/rectangle-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/rectangle.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/heart-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/heart.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/diamond-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/diamond.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/triangle-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/triangle.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/inverted-triangle-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/inverted-triangle.webp": [
+  240,
+  240
+ ],
+ "/images/face-shapes/pear-face-shape.webp": [
+  400,
+  400
+ ],
+ "/images/face-shapes/thumbs/pear.webp": [
+  240,
+  240
+ ],
+ "/images/eye-shapes/almond.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/round.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/hooded.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/monolid.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/upturned.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/downturned.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/deep-set.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/protruding.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/close-set.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/wide-set.webp": [
+  400,
+  270
+ ],
+ "/images/eye-shapes/eye-shapes-chart.webp": [
+  1000,
+  1050
+ ],
+ "/images/lip-shapes/full.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/thin.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/heart.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/bow.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/top-heavy.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/bottom-heavy.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/wide.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/round.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/downturned.webp": [
+  400,
+  265
+ ],
+ "/images/lip-shapes/lip-shapes-chart.webp": [
+  1000,
+  800
+ ],
+ "/images/nose-shapes/greek.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/roman.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/nubian.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/hawk.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/button.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/snub.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/celestial.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/fleshy.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/bumpy.webp": [
+  400,
+  280
+ ],
+ "/images/nose-shapes/nose-shapes-chart.webp": [
+  1000,
+  800
+ ],
+ "/images/head-shapes/round.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/oval.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/long.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/flat-back.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/square.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/egg.webp": [
+  400,
+  310
+ ],
+ "/images/head-shapes/head-shapes-chart.webp": [
+  1000,
+  550
+ ],
+ "/images/jawline-shapes/square.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/rounded.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/v-shaped.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/pointed.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/wide.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/narrow.webp": [
+  300,
+  300
+ ],
+ "/images/jawline-shapes/jawline-shapes-chart.webp": [
+  1000,
+  550
+ ]
+}

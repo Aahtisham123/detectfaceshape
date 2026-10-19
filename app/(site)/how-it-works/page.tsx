@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import StaticPage from "@/components/StaticPage";
+import { metaFor } from "@/lib/meta";
 import { FACE_NORMS } from "@/lib/face/faceShape";
 
-export const metadata: Metadata = {
-  title: "How Our Face Shape Detector Works (Methodology)",
-  description: "The methodology behind our face shape detector: on-device landmark detection, head-pose correction, measurements, calibration on real faces and scoring.",
-  alternates: { canonical: "/how-it-works/" },
-};
+export const metadata: Metadata = metaFor("/how-it-works/");
 
 const n = FACE_NORMS;
 const body = `This page explains exactly how our tools turn a photo into a result, so you can judge how much to trust it.
@@ -74,5 +71,5 @@ The other tools use the same landmarks and the same calibrate-then-compare appro
 Guides are written by Ahtisham Alam from published styling conventions and anthropometric references, and are reviewed whenever our tools change. Celebrity examples reflect how those people are commonly described in style media, not measurements of them. Fun tools (attractiveness, age, golden ratio) are labeled as such.`;
 
 export default function HowItWorks() {
-  return <StaticPage title="How Our Detector Works" path="/how-it-works/" body={body} />;
+  return <StaticPage title="How Our Detector Works" path="/how-it-works/" body={body} icon="Brain" />;
 }

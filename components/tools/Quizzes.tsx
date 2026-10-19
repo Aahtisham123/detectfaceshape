@@ -12,6 +12,8 @@ import { FACE_SHAPES } from "@/lib/content/faceShapes";
 import { hubBySlug } from "@/lib/content/typeHubs";
 import { sampleSkinHue } from "@/lib/face/skin";
 import { aOrAn } from "@/lib/text";
+import { Icon } from "@/components/icons";
+import { toast } from "@/lib/toast";
 
 const shapeName = (k: string) => FACE_SHAPES.find((s) => s.slug === k)?.name ?? k;
 
@@ -116,6 +118,7 @@ export function FaceShapeCalculator() {
   const [v, setV] = useState({ forehead: "", cheeks: "", jawHalf: "", length: "" });
   const [sharp, setSharp] = useState(false);
   const [result, setResult] = useState<ReturnType<typeof calculateFaceShape> | null>(null);
+  const [err, setErr] = useState("");
   const nums = Object.values(v).map(Number);
   const valid = nums.every((n) => n > 0);
   const field = (k: keyof typeof v, label: string, help: string) => (
@@ -136,11 +139,25 @@ export function FaceShapeCalculator() {
       <label className="check"><input type="checkbox" checked={sharp} onChange={(e) => setSharp(e.target.checked)} /> My jaw has a sharp, visible corner</label>
       <button
         className="btn primary"
-        disabled={!valid}
-        onClick={() => setResult(calculateFaceShape({ forehead: +v.forehead, cheeks: +v.cheeks, jawHalf: +v.jawHalf, length: +v.length, sharpJaw: sharp }))}
+        onClick={() => {
+          if (!valid) {
+            setErr("Enter all four measurements as positive numbers (inches or centimeters, just be consistent).");
+            toast("error", "Please fill in all four measurements.");
+            return;
+          }
+          if (+v.length < +v.cheeks * 0.8 || +v.length > +v.cheeks * 2.5) {
+            setErr("Those numbers look unusual. Face length is normally 1–2× your cheekbone width. Double-check you used the same unit.");
+            toast("error", "Check your measurements and units.");
+            return;
+          }
+          setErr("");
+          setResult(calculateFaceShape({ forehead: +v.forehead, cheeks: +v.cheeks, jawHalf: +v.jawHalf, length: +v.length, sharpJaw: sharp }));
+          toast("success", "Calculated! Your face shape is below.");
+        }}
       >
-        Calculate my face shape
+        <Icon name="Calculator" size={18} /> Calculate my face shape
       </button>
+      {err && <p className="alert" role="alert"><Icon name="TriangleAlert" size={20} /> <span>{err}</span></p>}
       {result && (
         <div className="result">
           <ResultHeader eyebrow="Your face shape" title={shapeName(result[0].key)} />
@@ -291,11 +308,11 @@ function UndertonePhoto({ done }: { done: (s: Record<string, number>) => void })
         render={(r) => (
           <>
             <p>Your skin hue reads <strong>{Math.round(r.hue)}°</strong> ({r.hue > 60 ? "more golden: warm" : r.hue < 50 ? "more rosy: cool" : "balanced: neutral"}).</p>
-            <button className="btn primary" onClick={() => done(r.scores)}>See my result</button>
+            <button className="btn primary" onClick={() => done(r.scores)}><Icon name="Sparkles" size={16} /> See my result</button>
           </>
         )}
       />
-      <button className="btn link" onClick={() => done({})}>Skip the photo →</button>
+      <button className="btn link" onClick={() => done({})}>Skip the photo <Icon name="ArrowRight" size={16} /></button>
     </>
   );
 }

@@ -4,12 +4,10 @@ import { Breadcrumbs, JsonLd } from "@/components/Page";
 import { POSTS } from "@/lib/content/blog";
 import { breadcrumbs, graph, person } from "@/lib/schema";
 import { SITE } from "@/lib/site";
+import { metaFor } from "@/lib/meta";
+import { Byline } from "@/components/Page";
 
-export const metadata: Metadata = {
-  title: `${SITE.author.name}, ${SITE.author.role}`,
-  description: SITE.author.bio,
-  alternates: { canonical: `/authors/${SITE.author.slug}/` },
-};
+export const metadata: Metadata = metaFor(`/authors/${SITE.author.slug}/`);
 
 export default function Author() {
   const path = `/authors/${SITE.author.slug}/`;
@@ -18,15 +16,19 @@ export default function Author() {
     <div className="wrap">
       <JsonLd data={graph({ "@type": "ProfilePage", mainEntity: person() }, breadcrumbs(crumbs))} />
       <Breadcrumbs items={crumbs} />
-      <header className="page-head">
-        <h1>{SITE.author.name}</h1>
-        <p className="lead">{SITE.author.role}, {SITE.name}</p>
+      <header className="page-hero author-hero">
+        <span className="avatar big" aria-hidden="true">AA</span>
+        <div className="page-hero-text">
+          <h1>{SITE.author.name}</h1>
+          <p className="lead">{SITE.author.role}, {SITE.name}</p>
+        </div>
       </header>
       <div className="content">
+        <Byline />
         <p>{SITE.author.bio}</p>
         <p>Read how our tools are built and tested on the <Link href="/how-it-works/">methodology page</Link>.</p>
         <h2>Articles</h2>
-        <ul>{POSTS.map((p) => <li key={p.slug}><Link href={`/blog/${p.slug}/`}>{p.title}</Link></li>)}</ul>
+        <ul className="arrow-list">{POSTS.map((p) => <li key={p.slug}><Link href={`/blog/${p.slug}/`}>{p.title}</Link></li>)}</ul>
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ShapeIllustration from "@/components/ShapeIllustration";
-import { Breadcrumbs, Byline, FaqList, JsonLd, RelatedTools } from "@/components/Page";
+import { Breadcrumbs, Byline, FaqList, Figure, JsonLd, RelatedTools } from "@/components/Page";
+import { Icon } from "@/components/icons";
+import { metaFor } from "@/lib/meta";
+import { seoFor } from "@/lib/seo";
 import { FACE_SHAPES, faceShapeBySlug } from "@/lib/content/faceShapes";
 import { availableTopics, TOPIC_LABEL, type Topic } from "@/lib/content/faceShapeTopics";
 import type { FaceShape, Faq } from "@/lib/content/types";
@@ -12,27 +14,9 @@ import { aOrAn } from "@/lib/text";
 export const dynamicParams = false;
 export const generateStaticParams = () => FACE_SHAPES.flatMap((s) => availableTopics(s).map((topic) => ({ shape: s.slug, topic })));
 
-function meta(s: FaceShape, t: Topic) {
-  const n = s.name.toLowerCase();
-  switch (t) {
-    case "hairstyles-women":
-      return { title: `${s.women.hairstyles.length} Best Hairstyles for ${s.name} Faces (Women)`, description: `The most flattering haircuts for women with ${n} faces, why they work, and which styles to avoid.` };
-    case "hairstyles-men":
-      return { title: `Best Haircuts & Beards for ${s.name} Face Shape (Men)`, description: `The best men's haircuts and beard styles for ${aOrAn(n)} face shape, and what to avoid.` };
-    case "celebrities":
-      return { title: `Celebrities With ${s.name} Faces (Women & Men)`, description: `Famous women and men often described as having ${aOrAn(n)} face shape, and what their styling teaches you.` };
-    case "glasses":
-      return { title: `Best Glasses for ${s.name} Face Shape (and Frames to Avoid)`, description: `Which glasses and sunglasses suit ${aOrAn(n)} face, why they work, and frames to avoid.` };
-  }
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ shape: string; topic: string }> }): Promise<Metadata> {
   const { shape, topic } = await params;
-  const s = faceShapeBySlug(shape);
-  if (!s) return {};
-  const m = meta(s, topic as Topic);
-  const path = `/face-shapes/${s.slug}/${topic}/`;
-  return { title: { absolute: m.title }, description: m.description, alternates: { canonical: path }, openGraph: { title: m.title, url: path } };
+  return metaFor(`/face-shapes/${shape}/${topic}/`, { type: "article" });
 }
 
 export default async function TopicPage({ params }: { params: Promise<{ shape: string; topic: string }> }) {
@@ -40,22 +24,24 @@ export default async function TopicPage({ params }: { params: Promise<{ shape: s
   const s = faceShapeBySlug(shape);
   if (!s || !availableTopics(s).includes(topic as Topic)) notFound();
   const t = topic as Topic;
-  const m = meta(s, t);
   const n = s.name.toLowerCase();
   const path = `/face-shapes/${s.slug}/${t}/`;
+  const seo = seoFor(path);
+  const m = { title: H1[t](s.name), description: seo.description };
   const crumbs = [{ name: "Home", path: "/" }, { name: "Face Shapes", path: "/face-shapes/" }, { name: `${s.name} Face`, path: `/face-shapes/${s.slug}/` }, { name: TOPIC_LABEL[t](s.name), path }];
   const faqs: Faq[] = topicFaqs(s, t);
   return (
     <article className="wrap">
-      <JsonLd data={graph(article({ title: m.title, description: m.description, path, published: "2026-10-19" }), faqPage(faqs), breadcrumbs(crumbs))} />
+      <JsonLd data={graph(article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: seo.image }), faqPage(faqs), breadcrumbs(crumbs))} />
       <Breadcrumbs items={crumbs} />
-      <header className="page-head with-figure">
-        <div>
+      <header className="page-hero">
+        <div className="page-hero-text">
+          <span className="hero-badge"><Icon name="Shapes" size={18} /> {s.name} face guide</span>
           <h1>{m.title}</h1>
           <p className="lead">{lead(s, t)}</p>
-          <Link className="btn primary" href="/">Not sure you&apos;re {n}? Check your face shape</Link>
+          <Link className="btn primary" href="/"><Icon name="ScanFace" size={18} /> Not sure you&apos;re {n}? Check your face shape</Link>
         </div>
-        <ShapeIllustration shape={s.slug} size={170} />
+        <Figure src={seo.image!} alt={seo.imageAlt!} priority className="hero-figure small" />
       </header>
       <div className="content">
         <Byline />
@@ -64,7 +50,7 @@ export default async function TopicPage({ params }: { params: Promise<{ shape: s
             <h2>The best hairstyles for {n} faces</h2>
             <ol className="picks">{s.women.hairstyles.map((h) => <li key={h.name}><h3>{h.name}</h3><p>{h.why}</p></li>)}</ol>
             <h2>Hairstyles to avoid</h2>
-            <ul>{s.women.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
+            <ul className="x-list">{s.women.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
             <h2>The rule of thumb</h2>
             <p>{s.women.tips}</p>
             {s.women.celebrities.length > 0 && <p><strong>Inspiration:</strong> look at how {s.women.celebrities.slice(0, 3).join(", ")} wear their hair.</p>}
@@ -77,19 +63,19 @@ export default async function TopicPage({ params }: { params: Promise<{ shape: s
             {s.men.beards.length > 0 && (
               <>
                 <h2>Best beard styles</h2>
-                <ul>{s.men.beards.map((b) => <li key={b.name}><strong>{b.name}:</strong> {b.why}</li>)}</ul>
+                <ul className="check-list">{s.men.beards.map((b) => <li key={b.name}><strong>{b.name}:</strong> {b.why}</li>)}</ul>
               </>
             )}
             <h2>Haircuts to avoid</h2>
-            <ul>{s.men.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
+            <ul className="x-list">{s.men.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
             <h2>The rule of thumb</h2>
             <p>{s.men.tips}</p>
           </>
         )}
         {t === "celebrities" && (
           <>
-            {s.women.celebrities.length > 0 && (<><h2>Female celebrities with {n} faces</h2><ul>{s.women.celebrities.map((c) => <li key={c}>{c}</li>)}</ul></>)}
-            {s.men.celebrities.length > 0 && (<><h2>Male celebrities with {n} faces</h2><ul>{s.men.celebrities.map((c) => <li key={c}>{c}</li>)}</ul></>)}
+            {s.women.celebrities.length > 0 && (<><h2>Female celebrities with {n} faces</h2><ul className="pill-list">{s.women.celebrities.map((c) => <li key={c}><Icon name="Star" size={14} /> {c}</li>)}</ul></>)}
+            {s.men.celebrities.length > 0 && (<><h2>Male celebrities with {n} faces</h2><ul className="pill-list">{s.men.celebrities.map((c) => <li key={c}><Icon name="Star" size={14} /> {c}</li>)}</ul></>)}
             <h2>What you can learn from them</h2>
             <p>{s.women.tips} {s.men.tips}</p>
             <p className="fine">Celebrity face shapes are based on how they're commonly described in style media. Angles, lighting and styling change how a face looks, so treat these as examples rather than measurements.</p>
@@ -100,7 +86,7 @@ export default async function TopicPage({ params }: { params: Promise<{ shape: s
             <h2>Frames that suit {n} faces</h2>
             <ol className="picks">{s.glasses.best.map((g) => <li key={g.name}><h3>{g.name}</h3><p>{g.why}</p></li>)}</ol>
             <h2>Frames to avoid</h2>
-            <ul>{s.glasses.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
+            <ul className="x-list">{s.glasses.avoid.map((a) => <li key={a}>{a}</li>)}</ul>
             <h2>Fit matters as much as shape</h2>
             <p>Whatever the shape, the frame should be about as wide as your face at the temples, your eyes should sit near the horizontal center of each lens, and the top of the frame should follow your brow line.</p>
           </>
@@ -116,6 +102,13 @@ export default async function TopicPage({ params }: { params: Promise<{ shape: s
     </article>
   );
 }
+
+const H1: Record<Topic, (name: string) => string> = {
+  "hairstyles-women": (n) => `Best Hairstyles for ${n} Faces (Women)`,
+  "hairstyles-men": (n) => `Best Haircuts & Beards for ${n} Faces (Men)`,
+  celebrities: (n) => `Celebrities With ${n} Faces`,
+  glasses: (n) => `Best Glasses for ${n} Face Shape`,
+};
 
 function lead(s: FaceShape, t: Topic) {
   const n = s.name.toLowerCase();

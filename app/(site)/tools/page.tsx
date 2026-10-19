@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Breadcrumbs, JsonLd } from "@/components/Page";
+import { Breadcrumbs, JsonLd, ToolCard } from "@/components/Page";
+import { Icon } from "@/components/icons";
 import { TOOLS, type ToolCategory } from "@/lib/content/tools";
+import { metaFor } from "@/lib/meta";
 import { breadcrumbs, graph } from "@/lib/schema";
+import { absUrl } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Free AI Face Analysis Tools",
-  description: "Every free face analysis tool on DetectFaceShape.ai: face shape, eye, nose and lip shape, symmetry, golden ratio, undertone, color analysis and more.",
-  alternates: { canonical: "/tools/" },
-};
+export const metadata: Metadata = metaFor("/tools/");
 
 const GROUPS: { key: ToolCategory; title: string }[] = [
   { key: "face", title: "Face shape" },
@@ -20,21 +18,23 @@ const GROUPS: { key: ToolCategory; title: string }[] = [
 
 export default function ToolsIndex() {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Tools", path: "/tools/" }];
+  const list = { "@type": "ItemList", itemListElement: TOOLS.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: absUrl(t.path), name: t.name })) };
   return (
     <div className="wrap">
-      <JsonLd data={graph(breadcrumbs(crumbs))} />
+      <JsonLd data={graph(breadcrumbs(crumbs), list)} />
       <Breadcrumbs items={crumbs} />
-      <header className="page-head">
-        <h1>Free face analysis tools</h1>
-        <p className="lead">Every tool runs in your browser. Photos are never uploaded.</p>
+      <header className="page-hero">
+        <div className="page-hero-text">
+          <span className="hero-badge"><Icon name="Zap" size={18} /> {TOOLS.length} free tools</span>
+          <h1>Free AI Face Analysis Tools</h1>
+          <p className="lead">Every tool runs in your browser. Photos are never uploaded, and there&apos;s nothing to sign up for.</p>
+        </div>
       </header>
       {GROUPS.map((g) => (
-        <section key={g.key}>
-          <h2>{g.title}</h2>
+        <section key={g.key} data-reveal>
+          <h2 className="section-title">{g.title}</h2>
           <div className="card-grid">
-            {TOOLS.filter((t) => t.category === g.key).map((t) => (
-              <Link key={t.slug} href={t.path} className="card"><strong>{t.name}</strong><span>{t.short}</span></Link>
-            ))}
+            {TOOLS.filter((t) => t.category === g.key).map((t) => <ToolCard key={t.slug} name={t.name} short={t.short} path={t.path} />)}
           </div>
         </section>
       ))}

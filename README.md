@@ -1,4 +1,4 @@
-# DetectFaceShape.ai
+# Face Shape Detector (detectfaceshape.ai)
 
 Free AI face shape detector and face analysis tools, built with Next.js (App Router) and fully static.
 Every photo is analyzed **in the browser**. Nothing is uploaded.
@@ -19,6 +19,8 @@ npm run dev        # http://localhost:3000
 npm test           # unit tests (analyzers, quiz logic, content links, SEO limits)
 npm run lint       # type-check
 npm run build      # static build
+npm run images     # re-render the WebP illustrations, favicons and app icons (needs sharp, a dev dependency)
+npm run audit -- http://localhost:3000   # crawl a running build: broken links/images, titles, descriptions, alt text, H1s, canonicals, OG images
 ```
 
 Node 20.9+ is required.
@@ -35,6 +37,12 @@ Node 20.9+ is required.
 | `app/(embed)/embed/face-shape-quiz/` | Embeddable quiz widget (noindex, attribution link) |
 | `app/sitemap.ts`, `app/robots.ts` | Sitemap (with image entries) and robots |
 | `public/models/` | Face landmarker and age models, self-hosted |
+| `lib/seo.ts` | **Every page's title (≤ 50 chars), meta description (≤ 143), section and image.** Metadata, search, sitemap and OG images all read from it; `tests/seo.test.ts` enforces the limits |
+| `lib/graphics/svg.ts` + `scripts/build-images.mts` | Original vector illustrations (face, eye, nose, lip, head, jaw types, hero, logo) rendered to compressed WebP in `public/images/`, plus favicon.ico / PNG app icons |
+| `components/layout/` | Sticky header, left sidebar navigation (drawer on mobile), search dialog (⌘K), footer |
+| `components/ui/` | Toasts, copy button, cookie banner, back-to-top, scroll progress, scroll-reveal, table of contents |
+| `app/og/[file]/route.tsx` | A unique 1200×630 social image per page (`/og/<path>.png`) |
+| `lib/content/testimonials.ts` | Real user testimonials (empty until you add genuine ones; the section then appears automatically) |
 
 ## URL map
 

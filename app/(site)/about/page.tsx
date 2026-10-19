@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import StaticPage from "@/components/StaticPage";
+import { metaFor } from "@/lib/meta";
 import { organization } from "@/lib/schema";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = { title: "About DetectFaceShape.ai", description: "Who builds DetectFaceShape.ai, why, and how we keep your photos private.", alternates: { canonical: "/about/" } };
+export const metadata: Metadata = metaFor("/about/");
 
-const body = `DetectFaceShape.ai is a set of free tools that measure your face and explain what the measurements mean for hair, glasses, makeup and grooming.
+const body = `Face Shape Detector is a set of free tools that measure your face and explain what the measurements mean for hair, glasses, makeup and grooming.
 
 ## Why we built it
 
@@ -20,12 +21,12 @@ Most face shape advice asks you to judge your own face in a mirror, which is sur
 
 ## Who's behind it
 
-DetectFaceShape.ai is built and written by [${SITE.author.name}](/authors/${SITE.author.slug}/). ${SITE.author.bio}
+Face Shape Detector is built and written by [${SITE.author.name}](/authors/${SITE.author.slug}/). ${SITE.author.bio}
 
 ## Contact
 
 Spotted a mistake or want to suggest a tool? Email hello@detectfaceshape.ai.`;
 
 export default function About() {
-  return <StaticPage title="About DetectFaceShape.ai" path="/about/" body={body} extra={organization()} />;
+  return <StaticPage title="About Face Shape Detector" path="/about/" body={body} icon="Info" extra={organization()} />;
 }

@@ -46,10 +46,4 @@ describe("content", () => {
     for (const s of slugs) expect(s).toMatch(/^[a-z0-9-]+$/);
   });
 
-  test("titles fit in search results and descriptions aren't truncated badly", () => {
-    for (const t of [...TOOLS, ...FACE_SHAPES, ...POSTS]) {
-      expect(t.title.length, t.title).toBeLessThanOrEqual(75);
-      expect(t.description.length, t.description).toBeLessThanOrEqual(175);
-    }
-  });
 });

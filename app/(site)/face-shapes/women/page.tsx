@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import GenderGuide from "@/components/GenderGuide";
-import { GENDER_PAGES } from "@/lib/content/faceShapesHub";
+import { metaFor } from "@/lib/meta";
 
-const g = GENDER_PAGES.women;
-export const metadata: Metadata = { title: { absolute: g.title }, description: g.description, alternates: { canonical: "/face-shapes/women/" }, openGraph: { title: g.title, url: "/face-shapes/women/" } };
+export const metadata: Metadata = metaFor("/face-shapes/women/", { type: "article" });
 
 export default function Page() {
   return <GenderGuide gender="women" />;

@@ -1,32 +1,40 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Breadcrumbs, JsonLd } from "@/components/Page";
+import { Breadcrumbs, JsonLd, Pic } from "@/components/Page";
+import { Icon } from "@/components/icons";
 import { POSTS } from "@/lib/content/blog";
+import { IMG } from "@/lib/images";
+import { metaFor } from "@/lib/meta";
 import { breadcrumbs, graph } from "@/lib/schema";
+import { seoFor } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Face Shape, Hairstyle & Facial Feature Guides",
-  description: "Guides to face shapes, hairstyles, glasses, nose, eye and lip shapes, and how facial features change.",
-  alternates: { canonical: "/blog/" },
-};
+export const metadata: Metadata = metaFor("/blog/");
 
 export default function Blog() {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Blog", path: "/blog/" }];
   return (
     <div className="wrap">
-      <JsonLd data={graph(breadcrumbs(crumbs))} />
+      <JsonLd data={graph(breadcrumbs(crumbs), { "@type": "Blog", name: "Face Shape Detector guides", url: "https://detectfaceshape.ai/blog/" })} />
       <Breadcrumbs items={crumbs} />
-      <header className="page-head">
-        <h1>Guides</h1>
-        <p className="lead">Plain-English guides to face shapes, features and the styles that suit them.</p>
+      <header className="page-hero">
+        <div className="page-hero-text">
+          <span className="hero-badge"><Icon name="FileText" size={18} /> {POSTS.length} guides</span>
+          <h1>Face Shape &amp; Style Guides</h1>
+          <p className="lead">Plain-English guides to face shapes, features and the haircuts, glasses and styles that suit them.</p>
+        </div>
       </header>
-      <div className="post-list">
-        {POSTS.map((p) => (
-          <Link key={p.slug} href={`/blog/${p.slug}/`} className="post-card">
-            <strong>{p.title}</strong>
-            <span>{p.description}</span>
-          </Link>
-        ))}
+      <div className="post-grid" data-reveal>
+        {POSTS.map((p) => {
+          const seo = seoFor(`/blog/${p.slug}/`);
+          return (
+            <Link key={p.slug} href={`/blog/${p.slug}/`} className="post-card">
+              <Pic src={seo.image ?? IMG.faceChart} alt={seo.imageAlt ?? "Chart of the 10 face shapes"} />
+              <strong>{p.title}</strong>
+              <span>{seo.description}</span>
+              <span className="card-go">Read guide <Icon name="ArrowRight" size={15} /></span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
