@@ -2,7 +2,7 @@ import {
   ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, ChevronRight, CircleAlert,
   CircleCheck, CircleHelp, CircleUser, Clock, Compass, Cookie, Copy, Crown, Diamond, Droplet, Eye, FileText, Fingerprint,
   FlipHorizontal2, Gauge, Gem, GitCompare, Glasses, Grid3x3, Heart, Hexagon, House, Info, Layers, Lightbulb, ListChecks, Lock,
-  Mail, Menu, MessageSquare, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,
+  Mail, Menu, MessageSquare, PanelLeftClose, PanelLeftOpen, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,
   Shirt, Smile, Sparkles, Star, Target, Triangle, TriangleAlert, Upload, UserRound, Users, Wind, X, Zap, Cake,
   type LucideProps,
 } from "lucide-react";
@@ -11,7 +11,7 @@ const ICONS = {
   ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, ChevronRight, CircleAlert,
   CircleCheck, CircleHelp, CircleUser, Clock, Compass, Cookie, Copy, Crown, Diamond, Droplet, Eye, FileText, Fingerprint,
   FlipHorizontal2, Gauge, Gem, GitCompare, Glasses, Grid3x3, Heart, Hexagon, House, Info, Layers, Lightbulb, ListChecks, Lock,
-  Mail, Menu, MessageSquare, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,
+  Mail, Menu, MessageSquare, PanelLeftClose, PanelLeftOpen, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,
   Shirt, Smile, Sparkles, Star, Target, Triangle, TriangleAlert, Upload, UserRound, Users, Wind, X, Zap, Cake,
 };
 

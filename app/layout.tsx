@@ -37,8 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-US" suppressHydrationWarning>
       <head>
-        {/* Marks JS as available so scroll-reveal styles only hide content when they can also show it. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Marks JS as available (for scroll-reveal) and restores the collapsed sidebar before first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: "var d=document.documentElement;d.classList.add('js');try{if(localStorage.getItem('fsd-sidebar-collapsed')==='1')d.classList.add('sb-collapsed')}catch(e){}" }} />
       </head>
       <body>{children}</body>
     </html>

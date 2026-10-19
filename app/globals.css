@@ -117,6 +117,26 @@ main { outline: none; padding-bottom: 40px; }
 .sidebar-note svg { flex-shrink: 0; }
 .scrim { display: none; }
 
+/* collapse toggle + icon rail (desktop only) */
+.sidebar { transition: width 0.3s var(--ease), padding 0.3s var(--ease); }
+.collapse-btn { display: flex; align-items: center; gap: 11px; width: 100%; margin: 0 0 12px; padding: 8px 10px; border: 1px dashed var(--border); border-radius: 10px; background: none; color: var(--muted); font: inherit; font-size: 0.86rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.collapse-btn:hover { background: var(--surface-2); color: var(--accent); border-color: var(--accent); }
+.collapse-btn svg { flex-shrink: 0; }
+@media (min-width: 1024px) {
+  .sb-collapsed { --sidebar-w: 76px; }
+  .sb-collapsed .sidebar { padding: 18px 12px 24px; overflow-x: visible; overflow-y: auto; }
+  .sb-collapsed .sidebar a, .sb-collapsed .collapse-btn { justify-content: center; padding: 10px; gap: 0; }
+  .sb-collapsed .sidebar a > span, .sb-collapsed .collapse-btn > span, .sb-collapsed .sidebar-note > span { display: none; }
+  .sb-collapsed .nav-title { height: 1px; margin: 10px 6px; overflow: hidden; color: transparent; background: var(--border); }
+  .sb-collapsed .sidebar a:hover { transform: none; }
+  .sb-collapsed .sidebar a.active::before { left: -12px; }
+  .sb-collapsed .sidebar-note { justify-content: center; margin: 18px 0 0; padding: 10px; }
+  /* Tooltip with the page name, since only icons show. */
+  .sb-collapsed .sidebar a::after { content: attr(data-tip); position: fixed; left: 84px; margin-top: -2px; padding: 6px 10px; border-radius: 8px; background: var(--text); color: var(--bg); font-size: 0.82rem; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(-4px); transition: opacity 0.15s, transform 0.15s; z-index: 70; }
+  .sb-collapsed .sidebar a:hover::after, .sb-collapsed .sidebar a:focus-visible::after { opacity: 1; transform: none; }
+}
+@media (max-width: 1023px) { .collapse-btn { display: none; } }
+
 @media (max-width: 1023px) {
   .menu-btn { display: inline-grid; }
   .sidebar { position: fixed; z-index: 60; left: 0; top: var(--header-h); bottom: 0; height: auto; width: min(320px, 86vw); transform: translateX(-102%); transition: transform 0.32s var(--ease); box-shadow: var(--shadow-lg); }

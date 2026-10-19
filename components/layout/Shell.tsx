@@ -11,10 +11,23 @@ import SearchDialog from "./SearchDialog";
 import Toaster from "@/components/ui/Toaster";
 import { BackToTop, CookieBanner, RevealOnScroll, ScrollProgress } from "@/components/ui/Chrome";
 
+export const SIDEBAR_KEY = "fsd-sidebar-collapsed";
+
 export default function Shell({ children, footer }: { children: ReactNode; footer: ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  // Desktop-only: icon rail vs full menu. The class is set before paint by the script in app/layout.tsx.
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => setCollapsed(document.documentElement.classList.contains("sb-collapsed")), []);
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    document.documentElement.classList.toggle("sb-collapsed", next);
+    try {
+      localStorage.setItem(SIDEBAR_KEY, next ? "1" : "0");
+    } catch {}
+  };
 
   useEffect(() => setMenuOpen(false), [pathname]);
   useEffect(() => {
@@ -54,6 +67,17 @@ export default function Shell({ children, footer }: { children: ReactNode; foote
 
       <div className="layout">
         <aside id="sidebar" className={`sidebar${menuOpen ? " open" : ""}`} aria-label="Site navigation">
+          <button
+            className="collapse-btn"
+            onClick={toggleCollapsed}
+            aria-expanded={!collapsed}
+            aria-controls="sidebar"
+            aria-label={collapsed ? "Expand menu" : "Collapse menu"}
+            title={collapsed ? "Expand menu" : "Collapse menu"}
+          >
+            <Icon name={collapsed ? "PanelLeftOpen" : "PanelLeftClose"} size={18} />
+            <span>Collapse menu</span>
+          </button>
           <nav>
             {NAV.map((g) => (
               <div key={g.title} className="nav-group">
@@ -63,7 +87,7 @@ export default function Shell({ children, footer }: { children: ReactNode; foote
                     const active = it.href === "/" ? pathname === "/" : pathname.startsWith(it.href);
                     return (
                       <li key={it.href}>
-                        <Link href={it.href} className={active ? "active" : undefined} aria-current={active ? "page" : undefined}>
+                        <Link href={it.href} className={active ? "active" : undefined} aria-current={active ? "page" : undefined} data-tip={it.label} aria-label={collapsed ? it.label : undefined}>
                           <Icon name={it.icon} size={18} />
                           <span>{it.label}</span>
                         </Link>
@@ -74,7 +98,7 @@ export default function Shell({ children, footer }: { children: ReactNode; foote
               </div>
             ))}
           </nav>
-          <div className="sidebar-note">
+          <div className="sidebar-note" title="Photos are analyzed on your device and never uploaded.">
             <Icon name="ShieldCheck" size={18} />
             <span>Photos are analyzed on your device and never uploaded.</span>
           </div>
