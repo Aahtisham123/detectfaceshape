@@ -67,7 +67,8 @@ Designed for Vercel (or any Next.js host):
 
 1. Import the repo; the default build command works. `postinstall` copies the WASM runtime.
 2. Add `detectfaceshape.ai` as the primary domain and redirect `www` to it at the domain level. `next.config.ts` also redirects `www`.
-3. Submit `https://detectfaceshape.ai/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
+3. Production deploys from `main`. Commits must be authored with an email on the GitHub account linked to the Vercel account (here `ahtipazeer@gmail.com`); on the Hobby plan Vercel skips pushes from unknown authors. If a push doesn't deploy, use **Deployments → Create Deployment** with branch `main`.
+4. Submit `https://detectfaceshape.ai/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
 
 ## Before launch
 
