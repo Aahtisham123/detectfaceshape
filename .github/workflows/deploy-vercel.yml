@@ -1,0 +1,49 @@
+# Deploys every push to main to Vercel production, independent of Vercel's own Git integration.
+# One-time setup (repo → Settings → Secrets and variables → Actions → New repository secret):
+#   VERCEL_TOKEN       – vercel.com/account/tokens → Create
+#   VERCEL_ORG_ID      – Vercel team/account ID (Team Settings → General → Team ID, or "Your ID" in Account Settings)
+#   VERCEL_PROJECT_ID  – Vercel project → Settings → General → Project ID
+# Until the secrets exist the job skips instead of failing.
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Check secrets
+        id: secrets
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::notice::Vercel secrets not set; skipping deploy. See the comment at the top of this workflow."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ready == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: 22
+      - name: Pull Vercel project settings
+        if: steps.secrets.outputs.ready == 'true'
+        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Build
+        if: steps.secrets.outputs.ready == 'true'
+        run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
+      - name: Deploy to production
+        if: steps.secrets.outputs.ready == 'true'
+        run: npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
