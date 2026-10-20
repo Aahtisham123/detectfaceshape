@@ -54,7 +54,7 @@ export default function Quiz({
   const q = questions[step];
   return (
     <div className="quiz" key={step}>
-      <div className="quiz-progress" aria-label={`Question ${step + 1} of ${questions.length}`}>
+      <div className="quiz-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={step} aria-valuetext={`Question ${step + 1} of ${questions.length}`}>
         <span style={{ width: `${(step / questions.length) * 100}%` }} />
       </div>
       <p className="eyebrow">Question {step + 1} of {questions.length}</p>

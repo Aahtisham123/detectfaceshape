@@ -6,10 +6,9 @@ import { ResultHeader, ScoreDial } from "./ui";
 import { classifyFaceShape } from "@/lib/face/faceShape";
 import { faceSimilarity } from "@/lib/face/features";
 import type { Pt } from "@/lib/face/geometry";
-import { FACE_SHAPES } from "@/lib/content/faceShapes";
+import { useLite } from "./LiteContext";
 
 type Face = { pts: Pt[]; shape: string };
-const nameOf = (s: string) => FACE_SHAPES.find((f) => f.slug === s)?.name ?? s;
 
 /**
  * Procrustes distance → 0–100. Across 820 pairs of frontal calibration photos the median distance
@@ -18,6 +17,7 @@ const nameOf = (s: string) => FACE_SHAPES.find((f) => f.slug === s)?.name ?? s;
 const toScore = (d: number) => Math.round(Math.max(0, Math.min(100, 100 - (d - 0.03) * 1000)));
 
 export default function FaceComparison() {
+  const nameOf = useLite().shapeName;
   const [a, setA] = useState<Face | null>(null);
   const [b, setB] = useState<Face | null>(null);
   const analyze = ({ frame }: { frame: { pts: Pt[] } & Parameters<typeof classifyFaceShape>[0] }) => ({ pts: frame.pts, shape: classifyFaceShape(frame).shape });

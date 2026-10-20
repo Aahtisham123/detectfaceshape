@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs, Byline, FaqList, Figure, Pic, JsonLd, KeyTakeaways, Markdown, RelatedTools } from "@/components/Page";
 import { Icon } from "@/components/icons";
 import { hubBySlug, TYPE_HUBS } from "@/lib/content/typeHubs";
+import { TYPE_EXTRAS } from "@/lib/content/typeExtras";
 import { toolBySlug } from "@/lib/content/tools";
 import { IMG, ILLUSTRATED_HUBS } from "@/lib/images";
 import { metaFor } from "@/lib/meta";
@@ -37,9 +38,12 @@ export default async function TypePage({ params }: { params: Promise<{ slug: str
   const tool = hub.toolSlug ? toolBySlug(hub.toolSlug) : undefined;
   const others = hub.items.filter((o) => o.slug !== it.slug);
   const illustrated = ILLUSTRATED_HUBS.includes(hub.slug);
+  const extra = TYPE_EXTRAS[`${hub.slug}/${it.slug}`];
+  const faqs = [...it.faqs, ...(extra?.faqs ?? [])];
+  const lower = it.name.toLowerCase();
   return (
     <article className="wrap">
-      <JsonLd data={graph(article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: seo.image }), faqPage(it.faqs), breadcrumbs(crumbs))} />
+      <JsonLd data={graph(article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: seo.image }), faqPage(faqs), breadcrumbs(crumbs))} />
       <Breadcrumbs items={crumbs} />
       <header className="page-hero">
         <div className="page-hero-text">
@@ -53,7 +57,31 @@ export default async function TypePage({ params }: { params: Promise<{ slug: str
       <div className="content">
         <Byline />
         <KeyTakeaways items={it.traits} />
+        {extra && (
+          <>
+            <h2>How to tell if you have {lower}</h2>
+            <ol>{extra.howToTell.map((t) => <li key={t}>{t}</li>)}</ol>
+          </>
+        )}
         <Markdown src={it.body} />
+        {extra && (
+          <>
+            <h2>{extra.tips.title}</h2>
+            <ul className="check-list">{extra.tips.items.map((t) => <li key={t}>{t}</li>)}</ul>
+            <h2>{it.name} vs similar {hub.name.toLowerCase()}</h2>
+            <div className="compare-cards">
+              {extra.compare.map((c) => {
+                const other = hub.items.find((o) => o.slug === c.slug)!;
+                return (
+                  <Link key={c.slug} href={`/${hub.slug}/${c.slug}/`} className="mini-card wide">
+                    {illustrated && <Pic src={IMG.type(hub.slug, c.slug)} alt={`Illustration of ${other.name.toLowerCase()}`} />}
+                    <span><strong>{it.name} vs {other.name}</strong><br />{c.diff}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </>
+        )}
         {it.celebrities?.length ? (
           <>
             <h2>Celebrities often described as having {it.name.toLowerCase()}</h2>
@@ -61,7 +89,7 @@ export default async function TypePage({ params }: { params: Promise<{ slug: str
             <p className="fine">Based on how these people are commonly described in style and beauty media; lighting and angles vary between photos.</p>
           </>
         ) : null}
-        <FaqList faqs={it.faqs} />
+        <FaqList faqs={faqs} />
         <h2>Other {hub.name.toLowerCase()}</h2>
         <div className="mini-grid">
           {others.map((o) => (

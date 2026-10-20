@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { LiteProvider } from "./LiteContext";
+import type { Lite } from "@/lib/content/lite";
 
 const loading = () => <div className="capture stage-placeholder" aria-hidden="true" />;
 
@@ -28,7 +30,7 @@ const WIDGETS: Record<string, React.ComponentType> = {
   "face-comparison": dynamic(() => import("./FaceComparison"), { loading }),
 };
 
-export default function ToolWidget({ slug }: { slug: string }) {
+export default function ToolWidget({ slug, lite }: { slug: string; lite: Lite }) {
   const W = WIDGETS[slug];
-  return W ? <W /> : null;
+  return W ? <LiteProvider value={lite}><W /></LiteProvider> : null;
 }

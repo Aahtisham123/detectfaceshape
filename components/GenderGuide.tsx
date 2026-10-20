@@ -43,7 +43,7 @@ export default function GenderGuide({ gender }: { gender: "men" | "women" }) {
               </div>
               <p><Icon name="Scissors" size={16} className="inline-icon" /> <strong>Best {gender === "women" ? "hairstyles" : "haircuts"}:</strong> {d.hairstyles.slice(0, 4).map((h) => h.name.toLowerCase()).join(", ")}.</p>
               {gender === "men" && s.men.beards.length > 0 && <p><Icon name="UserRound" size={16} className="inline-icon" /> <strong>Beards:</strong> {s.men.beards.map((b) => b.name.toLowerCase()).join(", ")}.</p>}
-              <p><Icon name="Glasses" size={16} className="inline-icon" /> <strong>Glasses:</strong> {s.glasses.best.slice(0, 3).map((b) => b.name.toLowerCase()).join(", ")}.</p>
+              <p><Icon name="Glasses" size={16} className="inline-icon" /> <strong>Glasses:</strong> {s.glasses.best.slice(0, 3).map((b) => b.name.toLowerCase()).join(", ")}.{availableTopics(s).includes("glasses") && <> <Link href={`/face-shapes/${s.slug}/glasses/`}>Best glasses for {s.name.toLowerCase()} faces</Link>.</>}</p>
               {d.celebrities.length > 0 && <p><Icon name="Star" size={16} className="inline-icon" /> <strong>Celebrities:</strong> {d.celebrities.slice(0, 4).join(", ")}.</p>}
               {availableTopics(s).includes(topic) && <p><Link className="more-link" href={`/face-shapes/${s.slug}/${topic}/`}>All {gender === "women" ? "hairstyles" : "haircuts"} for {s.name.toLowerCase()} faces <Icon name="ArrowRight" size={15} /></Link></p>}
             </section>

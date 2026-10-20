@@ -6,7 +6,7 @@ export const organization = () => ({
   "@id": `${SITE.url}/#org`,
   name: SITE.name,
   url: SITE.url,
-  logo: absUrl("/icon.svg"),
+  logo: { "@type": "ImageObject", url: absUrl("/logo.png"), width: 512, height: 512 },
 });
 
 export const person = () => ({

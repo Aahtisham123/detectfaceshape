@@ -11,6 +11,7 @@ import { metaFor } from "@/lib/meta";
 import { article, breadcrumbs, faqPage, graph } from "@/lib/schema";
 import { seoFor } from "@/lib/seo";
 import { aOrAn } from "@/lib/text";
+import { portraitsFor } from "@/lib/portraits";
 
 export const dynamicParams = false;
 export const generateStaticParams = () => FACE_SHAPES.map((s) => ({ shape: s.slug }));
@@ -29,6 +30,7 @@ export default async function ShapePage({ params }: { params: Promise<{ shape: s
   const crumbs = [{ name: "Home", path: "/" }, { name: "Face Shapes", path: "/face-shapes/" }, { name: `${s.name} Face`, path }];
   const topics = availableTopics(s);
   const n = s.name.toLowerCase();
+  const portraits = portraitsFor(s.slug);
   return (
     <article className="wrap">
       <JsonLd data={graph(article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: seo.image }), faqPage(s.faqs), breadcrumbs(crumbs))} />
@@ -49,6 +51,14 @@ export default async function ShapePage({ params }: { params: Promise<{ shape: s
         <div className="content">
           <Byline readMinutes={readingTime(s.body, s.makeup, s.definition) + 2} />
           <KeyTakeaways items={s.traits} />
+          {portraits.length > 0 && (
+            <section aria-label={`Real examples of ${aOrAn(n)} face shape`}>
+              <h2>What {aOrAn(n)} face shape looks like</h2>
+              <div className="portrait-row">
+                {portraits.map((p) => <Figure key={p.src} src={p.src} alt={p.alt} caption={p.alt} className="portrait" />)}
+              </div>
+            </section>
+          )}
           <h2>{s.name} face shape measurements</h2>
           <div className="table-wrap">
             <table className="data-table">

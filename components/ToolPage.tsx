@@ -6,6 +6,7 @@ import CopyButton from "@/components/ui/CopyButton";
 import { Icon } from "@/components/icons";
 import type { Tool } from "@/lib/content/tools";
 import { hubBySlug } from "@/lib/content/typeHubs";
+import { liteContent } from "@/lib/content/lite";
 import { NAV } from "@/lib/nav";
 import { breadcrumbs, faqPage, graph, webApp } from "@/lib/schema";
 import { seoFor } from "@/lib/seo";
@@ -47,18 +48,21 @@ export default function ToolPage({ tool, children, hero }: { tool: Tool; childre
       </header>
 
       <div className="tool-shell" id="tool">
-        <ToolWidget slug={tool.slug} />
+        <ToolWidget slug={tool.slug} lite={liteContent()} />
       </div>
 
-      <section className="steps" aria-label="How it works" data-reveal>
+      <section className="steps-section" aria-labelledby="how-it-works" data-reveal>
+        <h2 id="how-it-works" className="section-title">Get your result in 3 steps</h2>
+        <div className="steps">
         {steps.map((s, i) => (
           <div key={s.title} className="step">
             <span className="step-num">{i + 1}</span>
             <Icon name={s.icon} size={26} className="step-icon" />
-            <h2 className="step-title">{s.title}</h2>
+            <h3 className="step-title">{s.title}</h3>
             <p>{s.text}</p>
           </div>
         ))}
+        </div>
       </section>
 
       {children}

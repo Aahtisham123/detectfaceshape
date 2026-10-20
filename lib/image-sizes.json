@@ -4,88 +4,88 @@
   480
  ],
  "/images/face-shapes/face-shapes-chart.webp": [
-  1000,
-  480
+  800,
+  384
  ],
  "/images/face-shapes/oval-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/oval.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/round-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/round.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/square-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/square.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/oblong-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/oblong.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/rectangle-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/rectangle.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/heart-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/heart.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/diamond-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/diamond.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/triangle-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/triangle.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/inverted-triangle-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/inverted-triangle.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/face-shapes/pear-face-shape.webp": [
   400,
   400
  ],
  "/images/face-shapes/thumbs/pear.webp": [
-  240,
-  240
+  180,
+  180
  ],
  "/images/eye-shapes/almond.webp": [
   400,
@@ -128,8 +128,8 @@
   270
  ],
  "/images/eye-shapes/eye-shapes-chart.webp": [
-  1000,
-  1050
+  800,
+  840
  ],
  "/images/lip-shapes/full.webp": [
   400,
@@ -168,8 +168,8 @@
   265
  ],
  "/images/lip-shapes/lip-shapes-chart.webp": [
-  1000,
-  800
+  800,
+  640
  ],
  "/images/nose-shapes/greek.webp": [
   400,
@@ -208,8 +208,8 @@
   280
  ],
  "/images/nose-shapes/nose-shapes-chart.webp": [
-  1000,
-  800
+  800,
+  640
  ],
  "/images/head-shapes/round.webp": [
   400,
@@ -236,8 +236,8 @@
   310
  ],
  "/images/head-shapes/head-shapes-chart.webp": [
-  1000,
-  550
+  800,
+  440
  ],
  "/images/jawline-shapes/square.webp": [
   300,
@@ -264,7 +264,7 @@
   300
  ],
  "/images/jawline-shapes/jawline-shapes-chart.webp": [
-  1000,
-  550
+  800,
+  440
  ]
 }

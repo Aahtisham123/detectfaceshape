@@ -7,6 +7,7 @@ import { IMG } from "@/lib/images";
 import { metaFor } from "@/lib/meta";
 import { breadcrumbs, graph } from "@/lib/schema";
 import { seoFor } from "@/lib/seo";
+import { absUrl } from "@/lib/site";
 
 export const metadata: Metadata = metaFor("/blog/");
 
@@ -14,7 +15,7 @@ export default function Blog() {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Blog", path: "/blog/" }];
   return (
     <div className="wrap">
-      <JsonLd data={graph(breadcrumbs(crumbs), { "@type": "Blog", name: "Face Shape Detector guides", url: "https://detectfaceshape.ai/blog/" })} />
+      <JsonLd data={graph(breadcrumbs(crumbs), { "@type": "Blog", name: "Face Shape Detector guides", url: absUrl("/blog/") })} />
       <Breadcrumbs items={crumbs} />
       <header className="page-hero">
         <div className="page-hero-text">

@@ -42,6 +42,8 @@ Node 20.9+ is required.
 | `components/layout/` | Sticky header, left sidebar navigation (drawer on mobile), search dialog (⌘K), footer |
 | `components/ui/` | Toasts, copy button, cookie banner, back-to-top, scroll progress, scroll-reveal, table of contents |
 | `app/og/[file]/route.tsx` | A unique 1200×630 social image per page (`/og/<path>.png`) |
+| `assets/portraits/` | Drop real photos named `<shape>-<woman|man>.jpg`; `npm run images` compresses them to WebP and they appear on that face shape page automatically |
+| `lib/content/typeExtras.ts` | How-to-tell steps, tips, comparisons and extra FAQs for every eye/nose/lip/head/jaw/Kibbe type page |
 | `lib/content/testimonials.ts` | Real user testimonials (empty until you add genuine ones; the section then appears automatically) |
 
 ## URL map
@@ -65,7 +67,7 @@ and `lib/face/classify.ts` (`NORMS`). Recalibrate them if you swap the landmark 
 
 Designed for Vercel (or any Next.js host):
 
-1. Import the repo; the default build command works. `postinstall` copies the WASM runtime.
+1. Import the repo; the default build command works. Set `NEXT_PUBLIC_SITE_URL=https://detectfaceshape.ai` once the custom domain is live (until then canonicals follow Vercel's production domain automatically; preview deployments are sent `X-Robots-Tag: noindex`). `postinstall` copies the WASM runtime.
 2. Add `detectfaceshape.ai` as the primary domain and redirect `www` to it at the domain level. `next.config.ts` also redirects `www`.
 3. Production deploys from `main`. Commits must be authored with an email on the GitHub account linked to the Vercel account (here `ahtipazeer@gmail.com`); on the Hobby plan Vercel skips pushes from unknown authors. If a push doesn't deploy, use **Deployments → Create Deployment** with branch `main`.
 4. Submit `https://detectfaceshape.ai/sitemap.xml` in Google Search Console and Bing Webmaster Tools.

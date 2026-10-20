@@ -30,6 +30,9 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   const [result, setResult] = useState<R | null>(null);
   const [label, setLabel] = useState("");
   const [dragging, setDragging] = useState(false);
+  // Buttons stay disabled until hydration, so an early tap on a slow phone is never silently ignored.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
@@ -212,10 +215,10 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
           <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> Try another photo</button>
         ) : (
           <>
-            <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={status === "loading" || status === "analyzing"}>
+            <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={!ready || status === "loading" || status === "analyzing"}>
               <Icon name="Upload" size={18} /> Upload a photo
             </button>
-            <button className="btn" onClick={startCamera} disabled={status === "loading" || status === "analyzing"}>
+            <button className="btn" onClick={startCamera} disabled={!ready || status === "loading" || status === "analyzing"}>
               <Icon name="Camera" size={18} /> Use my camera
             </button>
           </>

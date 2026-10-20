@@ -6,16 +6,15 @@ import ShareCard from "./ShareCard";
 import { RankBars, ResultHeader, Warnings, fmt } from "./ui";
 import ShapeIllustration from "@/components/ShapeIllustration";
 import { classifyFaceShape, type FaceShapeResult } from "@/lib/face/faceShape";
-import { FACE_SHAPES } from "@/lib/content/faceShapes";
-import { availableTopics } from "@/lib/content/faceShapeTopics";
+import { useLite } from "./LiteContext";
 import { Icon } from "@/components/icons";
 
-const nameOf = (slug: string) => FACE_SHAPES.find((s) => s.slug === slug)?.name ?? slug;
 const EMOJI: Record<string, string> = {
   oval: "🥚", round: "🌕", square: "⬛", oblong: "📏", rectangle: "▭", heart: "💛", diamond: "💎", triangle: "🔺", "inverted-triangle": "🔻", pear: "🍐",
 };
 
 export default function FaceShapeDetector() {
+  const nameOf = useLite().shapeName;
   return (
     <FaceCapture<FaceShapeResult>
       guide="face"
@@ -30,7 +29,9 @@ export default function FaceShapeDetector() {
 }
 
 export function FaceShapeResultView({ r }: { r: FaceShapeResult }) {
-  const shape = FACE_SHAPES.find((s) => s.slug === r.shape)!;
+  const lite = useLite();
+  const nameOf = lite.shapeName;
+  const shape = lite.shape(r.shape)!;
   const second = r.ranking[1];
   const blend = second.pct > r.confidence * 0.6;
   const m = r.measurements;
@@ -47,8 +48,8 @@ export function FaceShapeResultView({ r }: { r: FaceShapeResult }) {
           <p>{shape.definition}</p>
           <div className="result-links">
             <Link className="btn primary" href={`/face-shapes/${shape.slug}/`}><Icon name="BookOpen" size={16} /> Your {shape.name.toLowerCase()} face guide</Link>
-            {availableTopics(shape).includes("hairstyles-women") && <Link className="btn" href={`/face-shapes/${shape.slug}/hairstyles-women/`}><Icon name="Scissors" size={16} /> Hairstyles</Link>}
-            {availableTopics(shape).includes("glasses") && <Link className="btn" href={`/face-shapes/${shape.slug}/glasses/`}><Icon name="Glasses" size={16} /> Glasses</Link>}
+            {shape.topics.includes("hairstyles-women") && <Link className="btn" href={`/face-shapes/${shape.slug}/hairstyles-women/`}><Icon name="Scissors" size={16} /> Hairstyles</Link>}
+            {shape.topics.includes("glasses") && <Link className="btn" href={`/face-shapes/${shape.slug}/glasses/`}><Icon name="Glasses" size={16} /> Glasses</Link>}
           </div>
         </div>
       </div>

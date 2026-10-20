@@ -8,14 +8,12 @@ import FaceCapture from "./FaceCapture";
 import ShareCard from "./ShareCard";
 import { RankBars, ResultHeader } from "./ui";
 import ShapeIllustration from "@/components/ShapeIllustration";
-import { FACE_SHAPES } from "@/lib/content/faceShapes";
-import { hubBySlug } from "@/lib/content/typeHubs";
+import { useLite } from "./LiteContext";
 import { sampleSkinHue } from "@/lib/face/skin";
 import { aOrAn } from "@/lib/text";
 import { Icon } from "@/components/icons";
 import { toast } from "@/lib/toast";
 
-const shapeName = (k: string) => FACE_SHAPES.find((s) => s.slug === k)?.name ?? k;
 
 /* ------------------------------------------------------------------ face shape quiz */
 
@@ -84,6 +82,8 @@ const FACE_QUIZ: QuizQuestion[] = [
 ];
 
 export function FaceShapeQuiz() {
+  const lite = useLite();
+  const shapeName = lite.shapeName;
   return (
     <Quiz
       questions={FACE_QUIZ}
@@ -96,7 +96,7 @@ export function FaceShapeQuiz() {
             <div className="result-grid">
               <ShapeIllustration shape={top} size={150} />
               <div>
-                <p>{FACE_SHAPES.find((s) => s.slug === top)!.definition}</p>
+                <p>{lite.shape(top)!.definition}</p>
                 <div className="result-links">
                   <Link className="btn primary" href={`/face-shapes/${top}/`}>Your {shapeName(top).toLowerCase()} face guide</Link>
                   <Link className="btn" href="/">Confirm with the photo detector</Link>
@@ -115,6 +115,7 @@ export function FaceShapeQuiz() {
 /* ------------------------------------------------------------------ face shape calculator */
 
 export function FaceShapeCalculator() {
+  const shapeName = useLite().shapeName;
   const [v, setV] = useState({ forehead: "", cheeks: "", jawHalf: "", length: "" });
   const [sharp, setSharp] = useState(false);
   const [result, setResult] = useState<ReturnType<typeof calculateFaceShape> | null>(null);
@@ -205,7 +206,7 @@ const HEAD_QUIZ: QuizQuestion[] = [
 ];
 
 export function HeadShapeQuiz() {
-  const hub = hubBySlug("head-shapes")!;
+  const hub = useLite().hub("head-shapes");
   const keys = hub.items.map((i) => i.slug);
   const label = (k: string) => hub.items.find((i) => i.slug === k)?.name ?? k;
   return (
@@ -529,7 +530,7 @@ const KIBBE_QUIZ: QuizQuestion[] = [
 ];
 
 export function KibbeTest() {
-  const hub = hubBySlug("kibbe-body-types")!;
+  const hub = useLite().hub("kibbe-body-types");
   const name = (k: string) => hub.items.find((i) => i.slug === k)?.name ?? k;
   return (
     <Quiz

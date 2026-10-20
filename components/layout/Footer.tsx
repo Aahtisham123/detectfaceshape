@@ -42,7 +42,7 @@ export default function Footer() {
             <li><Link href="/about/">About</Link></li>
             <li><Link href="/how-it-works/">How it works</Link></li>
             <li><Link href="/privacy/">Privacy policy</Link></li>
-            <li><Link href={`/authors/${SITE.author.slug}/`}>Author</Link></li>
+            <li><Link href="/authors/">Authors</Link></li>
             <li><a href={`mailto:${SITE.email}`}>Contact</a></li>
           </ul>
         </div>

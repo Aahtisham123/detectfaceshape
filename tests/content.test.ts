@@ -5,6 +5,7 @@ import { TOOLS } from "@/lib/content/tools";
 import { POSTS } from "@/lib/content/blog";
 import { availableTopics } from "@/lib/content/faceShapeTopics";
 import { FACE_SHAPE_KEYS } from "@/lib/quizLogic";
+import { TYPE_EXTRAS } from "@/lib/content/typeExtras";
 
 /** Every internal link in our content must point at a page we actually generate. */
 function allPaths() {
@@ -46,4 +47,14 @@ describe("content", () => {
     for (const s of slugs) expect(s).toMatch(/^[a-z0-9-]+$/);
   });
 
+
+  test("every type page has extra depth and its comparisons point at real types", () => {
+    for (const h of TYPE_HUBS) {
+      for (const it of h.items) {
+        const e = TYPE_EXTRAS[`${h.slug}/${it.slug}`];
+        expect(e, `${h.slug}/${it.slug}`).toBeDefined();
+        for (const c of e.compare) expect(h.items.map((i) => i.slug), `${h.slug}/${it.slug} → ${c.slug}`).toContain(c.slug);
+      }
+    }
+  });
 });

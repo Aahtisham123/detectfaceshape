@@ -16,7 +16,10 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    // Keep Vercel preview deployments (and any non-production build) out of search results.
+    const isProduction = !process.env.VERCEL_ENV || process.env.VERCEL_ENV === "production";
     return [
+      ...(isProduction ? [] : [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }]),
       {
         source: "/:path*",
         headers: [

@@ -6,7 +6,7 @@ import ShareCard from "./ShareCard";
 import { Meter, RankBars, ResultHeader, Traits, Warnings } from "./ui";
 import { analyzeEyes, analyzeJaw, analyzeLips, analyzeNose } from "@/lib/face/classify";
 import type { FaceFrame } from "@/lib/face/normalize";
-import { hubBySlug } from "@/lib/content/typeHubs";
+import { useLite } from "./LiteContext";
 
 type Kind = "eyes" | "nose" | "lips" | "jaw";
 type Generic = { shape: string; ranking: { key: string; pct: number }[]; traits: Record<string, string>; warnings: string[]; definition?: number };
@@ -20,7 +20,7 @@ const CONFIG: Record<Kind, { hub: string; analyze: (f: FaceFrame) => Generic; ey
 
 export default function FeatureDetector({ kind }: { kind: Kind }) {
   const cfg = CONFIG[kind];
-  const hub = hubBySlug(cfg.hub)!;
+  const hub = useLite().hub(cfg.hub);
   const item = (key: string) => hub.items.find((i) => i.slug === key);
   const label = (key: string) => item(key)?.name ?? key;
   return (
