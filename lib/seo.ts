@@ -185,12 +185,12 @@ function localizedPages(english: PageSeo[]): PageSeo[] {
     const en = (path: string) => english.find((p) => p.path === path)!;
     for (const tool of TOOLS) {
       const tx = c.tools[tool.slug];
-      out.push({ ...en(tool.path), path: localePath(locale, tool.path), title: tx.title, description: tx.description, locale, ...(tool.path === "/" ? { imageAlt: t("AI face shape detector measuring forehead, cheekbone and jaw width on a face outline") } : {}) });
+      out.push({ ...en(tool.path), path: localePath(locale, tool.path), title: tx.title, description: tx.description, locale, ...(tool.path === "/" ? { image: IMG.heroIn(locale), imageAlt: t("AI face shape detector measuring forehead, cheekbone and jaw width on a face outline") } : {}) });
     }
-    out.push({ ...en("/face-shapes/"), path: localePath(locale, "/face-shapes/"), title: c.hub.title, description: c.hub.description, locale, imageAlt: t("Chart of the 10 face shapes with forehead, cheekbone and jaw width lines") });
+    out.push({ ...en("/face-shapes/"), path: localePath(locale, "/face-shapes/"), title: c.hub.title, description: c.hub.description, locale, image: IMG.faceChartIn(locale), imageAlt: t("Chart of the 10 face shapes with forehead, cheekbone and jaw width lines") });
     for (const s of FACE_SHAPES) {
       const sx = c.shapes[s.slug];
-      out.push({ ...en(`/face-shapes/${s.slug}/`), path: localePath(locale, `/face-shapes/${s.slug}/`), title: sx.title, description: sx.description, locale, imageAlt: t("{Shape} face shape diagram with forehead, cheekbone and jaw width lines", { Shape: sx.name, shape: sx.name.toLowerCase() }) });
+      out.push({ ...en(`/face-shapes/${s.slug}/`), path: localePath(locale, `/face-shapes/${s.slug}/`), title: sx.title, description: sx.description, locale, image: IMG.faceShapeIn(s.slug, locale), imageAlt: t("{Shape} face shape diagram with forehead, cheekbone and jaw width lines", { Shape: sx.name, shape: sx.name.toLowerCase() }) });
     }
   }
   return out;

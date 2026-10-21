@@ -34,7 +34,7 @@ export default function Home({ locale = "en" }: { locale?: Locale }) {
     <ToolPage
       tool={tool}
       locale={locale}
-      hero={<Figure src={IMG.hero} alt={t("AI face shape detector measuring forehead, cheekbone and jaw width on a face outline")} priority className="hero-figure" />}
+      hero={<Figure src={IMG.heroIn(locale)} alt={t("AI face shape detector measuring forehead, cheekbone and jaw width on a face outline")} priority className="hero-figure" />}
     >
       <JsonLd
         data={graph(organization(), {

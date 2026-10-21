@@ -7,6 +7,15 @@ import { fileURLToPath } from "node:url";
 import { faceShapeSvg, faceChartSvg, heroSvg, eyeSvg, lipSvg, noseSvg, headSvg, jawSvg, gridSvg, logoSvg } from "../lib/graphics/svg";
 import { FACE_SHAPES } from "../lib/content/faceShapes";
 import { hubBySlug } from "../lib/content/typeHubs";
+import { CHROME } from "../lib/i18n/chrome";
+import { OTHER_LOCALES } from "../lib/i18n/config";
+
+// On-image text for the translated homepage hero, face shape chart and face shape diagrams.
+const GRAPHIC_TEXT = {
+  es: { forehead: "Frente", cheekbones: "Pómulos", jaw: "Mandíbula", badge: "En tu equipo", chart: "Las 10 formas de cara" },
+  fr: { forehead: "Front", cheekbones: "Pommettes", jaw: "Mâchoire", badge: "Sur l'appareil", chart: "Les 10 formes de visage" },
+  pt: { forehead: "Testa", cheekbones: "Maçãs", jaw: "Mandíbula", badge: "No aparelho", chart: "Os 10 formatos de rosto" },
+};
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pub = join(root, "public");
@@ -28,6 +37,14 @@ for (const s of FACE_SHAPES) {
   await webp(faceShapeSvg(s.slug, `${s.name} face shape`), `images/face-shapes/${s.slug}-face-shape.webp`, 800);
   // Unlabeled thumbnails for galleries, where the name is already shown as link text.
   await webp(faceShapeSvg(s.slug), `images/face-shapes/thumbs/${s.slug}.webp`, 360);
+}
+
+for (const locale of OTHER_LOCALES) {
+  const g = GRAPHIC_TEXT[locale];
+  const name = (s: { name: string }) => CHROME[locale][s.name] ?? s.name;
+  await webp(heroSvg(g), `images/hero/${locale}/face-shape-detector-scan.webp`, 1200);
+  await webp(faceChartSvg(FACE_SHAPES.map((s) => ({ slug: s.slug, name: name(s) })), g.chart), `images/face-shapes/${locale}/face-shapes-chart.webp`, 1600);
+  for (const s of FACE_SHAPES) await webp(faceShapeSvg(s.slug, name(s)), `images/face-shapes/${locale}/${s.slug}-face-shape.webp`, 800);
 }
 
 const hubs: [string, (t: string, l?: string) => string, number, number, number][] = [

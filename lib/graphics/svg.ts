@@ -74,14 +74,15 @@ export function faceShapeSvg(shape: string, label?: string) {
 }
 
 /** All 10 shapes in a 5×2 chart. */
-export function faceChartSvg(shapes: { slug: string; name: string }[]) {
+export function faceChartSvg(shapes: { slug: string; name: string }[], heading = "The 10 Face Shapes") {
   const cells = shapes.map((s, i) => faceGroup(s.slug, { label: s.name, ox: (i % 5) * 200, oy: Math.floor(i / 5) * 210 + 50 })).join("");
-  const title = `<text x="500" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="${INK}">The 10 Face Shapes</text>`;
+  const title = `<text x="500" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="${INK}">${heading}</text>`;
   return doc(1000, 480, title + cells, CREAM);
 }
 
 /** Hero graphic: a face with landmark dots, measurement lines and a scan beam. */
-export function heroSvg() {
+/** Hero illustration; `text` holds the on-image labels so translated pages get their own copy. */
+export function heroSvg(text = { forehead: "Forehead", cheekbones: "Cheekbones", jaw: "Jaw", badge: "On-device" }) {
   const spec = SHAPE_SPECS.oval;
   const height = 360;
   const half = height / spec.length / 2;
@@ -99,7 +100,7 @@ export function heroSvg() {
     dots.push(`<circle cx="${cx + dx * half}" cy="${y(dy)}" r="3" fill="${GOLD}"/>`);
   }
   const lines = [[0.28, 0.94], [0.5, 1], [0.75, 0.84]].map(([t, k]) => `<line x1="${cx - k * half}" x2="${cx + k * half}" y1="${y(t)}" y2="${y(t)}" stroke="${GOLD}" stroke-width="3" stroke-linecap="round"/>`).join("");
-  const labels = [["Forehead", 0.28, 0.94], ["Cheekbones", 0.5, 1], ["Jaw", 0.75, 0.84]].map(([l, t, k]) => `<text x="${cx + (k as number) * half + 14}" y="${y(t as number) + 5}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="${INK}">${l}</text>`).join("");
+  const labels = [[text.forehead, 0.28, 0.94], [text.cheekbones, 0.5, 1], [text.jaw, 0.75, 0.84]].map(([l, t, k]) => `<text x="${cx + (k as number) * half + 14}" y="${y(t as number) + 5}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="${INK}">${l}</text>`).join("");
   const body = `<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#efe7fb"/><stop offset="1" stop-color="#fdf1dc"/></linearGradient><linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PURPLE}" stop-opacity="0"/><stop offset="1" stop-color="${PURPLE}" stop-opacity="0.25"/></linearGradient></defs>
 <rect width="600" height="480" rx="32" fill="url(#bg)"/>
 <circle cx="510" cy="80" r="46" fill="${GOLD}" opacity="0.18"/><circle cx="90" cy="410" r="60" fill="${PURPLE}" opacity="0.1"/>
@@ -108,7 +109,7 @@ export function heroSvg() {
 <line x1="${cx - half - 20}" x2="${cx + half + 20}" y1="${y(0.18) + 70}" y2="${y(0.18) + 70}" stroke="${PURPLE}" stroke-width="3"/>
 <line x1="${cx}" x2="${cx}" y1="${top}" y2="${top + height}" stroke="${PURPLE}" stroke-width="2.5" stroke-dasharray="6 6"/>
 ${lines}${dots.join("")}${labels}
-<g transform="translate(40 40)"><rect width="150" height="44" rx="22" fill="#ffffff"/><circle cx="22" cy="22" r="7" fill="#1d7a55"/><text x="38" y="28" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" fill="${INK}">On-device</text></g>`;
+<g transform="translate(40 40)"><rect width="${Math.max(150, 56 + text.badge.length * 9.5)}" height="44" rx="22" fill="#ffffff"/><circle cx="22" cy="22" r="7" fill="#1d7a55"/><text x="38" y="28" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" fill="${INK}">${text.badge}</text></g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" width="600" height="480">${body}</svg>`;
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { collectKeys } from "@/scripts/i18n-keys.mts";
+import { collectKeys } from "@/scripts/i18n-keys.mjs";
 import { CHROME } from "@/lib/i18n/chrome";
 import { WIDGET } from "@/lib/i18n/widget";
 import { contentFor } from "@/lib/i18n/server";

@@ -354,6 +354,7 @@ export const hubNames: LocaleContent["hubNames"] = {
 };
 
 export const pages: Dict = {
+  "Key takeaways": "Puntos clave",
   "478 landmarks are placed and measured right in your browser.": "Se colocan y miden 478 puntos faciales directamente en tu navegador.",
   "AI face shape detector measuring forehead, cheekbone and jaw width on a face outline": "Detector de forma de cara con IA midiendo el ancho de la frente, los pómulos y la mandíbula sobre el contorno de un rostro",
   "AI measures your face": "La IA mide tu cara",

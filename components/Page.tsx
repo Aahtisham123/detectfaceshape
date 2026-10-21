@@ -120,11 +120,12 @@ export function Figure({ src, alt, caption, priority = false, className }: { src
 }
 
 export function KeyTakeaways({ items, locale = "en" }: { items: string[]; locale?: Locale }) {
-  const title = pageT(locale)("Key takeaways");
+  const t = pageT(locale);
+  const title = t("Key takeaways");
   return (
     <aside className="takeaways" aria-label={title} data-reveal>
       <p className="takeaways-title"><Icon name="Lightbulb" size={18} /> {title}</p>
-      <ul>{items.map((t) => <li key={t}>{t}</li>)}</ul>
+      <ul>{items.map((x) => <li key={x}>{x}</li>)}</ul>
     </aside>
   );
 }

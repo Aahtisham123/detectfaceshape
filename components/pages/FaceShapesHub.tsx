@@ -17,7 +17,7 @@ export default function FaceShapesHub({ locale = "en" }: { locale?: Locale }) {
   const crumbs = [{ name: t("Home"), path: localePath(locale, "/") }, { name: t("Face Shapes"), path }];
   return (
     <article className="wrap" lang={locale === "en" ? undefined : locale}>
-      <JsonLd data={graph({ ...article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: IMG.faceChart }), inLanguage: locale }, faqPage(hub.faqs), breadcrumbs(crumbs))} />
+      <JsonLd data={graph({ ...article({ title: seo.title, description: seo.description, path, published: "2026-10-19", image: IMG.faceChartIn(locale) }), inLanguage: locale }, faqPage(hub.faqs), breadcrumbs(crumbs))} />
       <Breadcrumbs items={crumbs} label={t("Breadcrumb")} />
       <header className="page-hero">
         <div className="page-hero-text">
@@ -27,7 +27,7 @@ export default function FaceShapesHub({ locale = "en" }: { locale?: Locale }) {
           <Link className="btn primary" href={localePath(locale, "/")}><Icon name="ScanFace" size={18} /> {t("Find your face shape from a photo")}</Link>
         </div>
       </header>
-      <Figure src={IMG.faceChart} alt={seo.imageAlt!} caption={t("Face shapes chart: gold lines mark forehead, cheekbone and jaw width")} priority className="chart-figure" />
+      <Figure src={IMG.faceChartIn(locale)} alt={seo.imageAlt!} caption={t("Face shapes chart: gold lines mark forehead, cheekbone and jaw width")} priority className="chart-figure" />
       <section aria-label={t("Face Shapes")} className="shape-gallery" data-reveal>
         {shapes.map((s) => (
           <Link key={s.slug} href={hrefIn(locale, `/face-shapes/${s.slug}/`)} className="shape-tile">
