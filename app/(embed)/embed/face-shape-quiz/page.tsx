@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ToolWidget from "@/components/tools/ToolWidget";
 import { SITE } from "@/lib/site";
-import { liteContent } from "@/lib/content/lite";
+import { liteFor } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: "Face Shape Quiz (embed)",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function EmbedQuiz() {
   return (
     <>
-      <ToolWidget slug="face-shape-quiz" lite={liteContent()} />
+      <ToolWidget slug="face-shape-quiz" lite={liteFor("en")} />
       <p className="embed-credit">
         Face shape quiz by{" "}
         <a href={`${SITE.url}/?utm_source=embed&utm_medium=widget`} target="_blank" rel="noopener">

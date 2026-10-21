@@ -2,13 +2,16 @@ import { describe, expect, test } from "vitest";
 import { allPages, HOME_TITLE } from "@/lib/seo";
 import { NAV } from "@/lib/nav";
 import { ogKey } from "@/lib/meta";
+import { stripLocale } from "@/lib/i18n/config";
 import SIZES from "@/lib/image-sizes.json";
 
 const pages = allPages();
 
 describe("seo registry", () => {
   test.each(pages.map((p) => [p.path, p] as const))("%s has a short title and description", (_path, p) => {
-    if (p.path !== "/") expect(p.title.length, p.title).toBeLessThanOrEqual(50);
+    // Homepages are exempt (English uses the requested title; translations get up to 60 characters).
+    if (stripLocale(p.path) !== "/") expect(p.title.length, p.title).toBeLessThanOrEqual(50);
+    else if (p.locale) expect(p.title.length, p.title).toBeLessThanOrEqual(60);
     expect(p.description.length, p.description).toBeLessThanOrEqual(143);
     expect(p.description.length, p.description).toBeGreaterThanOrEqual(70);
   });

@@ -73,11 +73,24 @@ export function collectKeys() {
   ["Eyes", "Eyebrows", "Nose", "Mouth", "Jaw", "Cheeks"].forEach((k) => widget.add(k)); // symmetry regions
   // Code values that appear inside t(cond ? ...) expressions but are never shown.
   for (const k of ["NotAllowedError", "loading"]) widget.delete(k);
-  return { chrome: [...chrome].sort(), widget: [...widget].filter((k) => !chrome.has(k)).sort() };
+
+  // Server-rendered page templates (tool pages, home, face-shape pages).
+  const pages = new Set<string>();
+  const templates = ["components/ToolPage.tsx", "components/Page.tsx", ...files("components/pages"), "lib/seo.ts"];
+  for (const f of templates) tCalls(read(f)).forEach((k) => pages.add(k));
+  for (const f of ["components/ToolPage.tsx", "components/pages/Home.tsx"]) for (const m of read(f).matchAll(/(?:label|title|text): "([^"]+)"/g)) pages.add(m[1]);
+  for (const m of read("components/pages/ShapePage.tsx").matchAll(/^\s+"?[\w-]+"?: "([^"]+)",$/gm)) pages.add(m[1]);
+  for (const s of ["oval", "round", "square", "oblong", "rectangle", "heart", "diamond", "triangle", "inverted triangle", "pear"])
+    for (const g of ["Woman", "Man"]) pages.add(`${g} with ${/^[aeiou]/.test(s) ? "an" : "a"} ${s} face shape`);
+  return {
+    chrome: [...chrome].sort(),
+    widget: [...widget].filter((k) => !chrome.has(k)).sort(),
+    pages: [...pages].filter((k) => !chrome.has(k)).sort(),
+  };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const k = collectKeys();
   console.log(JSON.stringify(k, null, 1));
-  console.error(`chrome: ${k.chrome.length} keys, widget: ${k.widget.length} keys`);
+  console.error(`chrome: ${k.chrome.length} keys, widget: ${k.widget.length} keys, pages: ${k.pages.length} keys`);
 }

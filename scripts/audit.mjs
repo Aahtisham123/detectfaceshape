@@ -7,6 +7,8 @@ const issues = [];
 const status = new Map();
 const report = (url, msg) => issues.push(`${url.replace(BASE, "")}: ${msg}`);
 const inbound = {};
+const alternates = {};
+const HOMES = new Set(["/", "/es/", "/fr/", "/pt/"]);
 
 async function check(url, kind = "page") {
   if (status.has(url)) return status.get(url);
@@ -28,7 +30,7 @@ for (let i = 0; i < queue.length; i++) {
   const path = url.replace(BASE, "");
   const title = /<title>([^<]*)<\/title>/.exec(html)?.[1]?.replace(/&amp;/g, "&").replace(/&#x27;/g, "'") ?? "";
   if (!title) report(url, "missing <title>");
-  else if (title.length > 50 && path !== "/") report(url, `title ${title.length} chars: ${title}`);
+  else if (title.length > (HOMES.has(path) ? (path === "/" ? 999 : 60) : 50)) report(url, `title ${title.length} chars: ${title}`);
   const desc = /<meta name="description" content="([^"]*)"/.exec(html)?.[1]?.replace(/&amp;/g, "&").replace(/&#x27;/g, "'") ?? "";
   if (!desc) report(url, "missing meta description");
   else if (desc.length > 143) report(url, `description ${desc.length} chars`);
@@ -36,6 +38,17 @@ for (let i = 0; i < queue.length; i++) {
   if (h1s !== 1) report(url, `${h1s} <h1> elements`);
   const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1];
   if (canonical !== `${ORIGIN}${path}`) report(url, `canonical ${canonical}`);
+  // hreflang: a page that lists alternates must list itself, and every alternate must link back.
+  const alts = Object.fromEntries([...html.matchAll(/<link rel="alternate" hrefLang="([^"]+)" href="([^"]+)"/gi)].map((m) => [m[1], m[2].replace(ORIGIN, "")]));
+  if (Object.keys(alts).length) {
+    alternates[path] = alts;
+    if (!Object.values(alts).includes(path)) report(url, "hreflang alternates miss the page itself");
+    if (!alts["x-default"]) report(url, "hreflang without x-default");
+    for (const p of Object.values(alts)) if (!seen.has(BASE + p)) { seen.add(BASE + p); queue.push(BASE + p); }
+  }
+  // Translated pages mark their content language (the <html lang> is synced on the client).
+  const loc = path.split("/")[1];
+  if (["es", "fr", "pt"].includes(loc) && !new RegExp(`<article[^>]* lang="${loc}"`).test(html)) report(url, `content not marked lang="${loc}"`);
   const og = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
   if (!og) report(url, "missing og:image");
   else {
@@ -87,6 +100,12 @@ for (const u of queue) {
   const p = u.replace(BASE, "");
   const from = [...(inbound[p] ?? [])];
   if (p !== "/" && from.length < 2) report(u, `weakly linked: ${from.length} inbound internal link(s)`);
+}
+for (const [p, alts] of Object.entries(alternates)) {
+  for (const [hl, q] of Object.entries(alts)) {
+    if (hl === "x-default" || q === p) continue;
+    if (!Object.values(alternates[q] ?? {}).includes(p)) report(BASE + p, `hreflang ${hl} → ${q} is not reciprocal`);
+  }
 }
 console.log(`Crawled ${queue.length} pages, ${status.size} URLs checked.`);
 const unique = [...new Set(issues)];

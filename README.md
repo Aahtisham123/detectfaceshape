@@ -54,7 +54,26 @@ Node 20.9+ is required.
 - Guides (separate from tools): `/eye-shapes/`, `/nose-shapes/`, `/lip-shapes/`, `/head-shapes/`, `/jawline-shapes/`, `/kibbe-body-types/`, each with one page per type
 - `/blog/{post}/`, `/tools/`, `/about/`, `/how-it-works/`, `/privacy/`, `/authors/ahtisham-alam/`
 
+- Translations: `/es/`, `/fr/`, `/pt/` (Brazilian Portuguese) versions of the homepage, every tool, `/face-shapes/` and the 10 shape pages, e.g. `/es/face-shape-quiz/`, `/fr/face-shapes/oval/`
+
 Topic sub-pages are only generated when a shape has enough unique content (see `lib/content/faceShapeTopics.ts`) to avoid thin pages.
+
+## Languages
+
+English lives at the root; Spanish, French and Brazilian Portuguese live under `/es/`, `/fr/` and `/pt/`. Every translated
+page has hreflang alternates (in the page head and in the sitemap) with English as `x-default`. Blog posts, type guides
+and legal pages are English only, and translated pages link to them with `hrefLang="en"`.
+
+| Path | What lives there |
+|---|---|
+| `lib/i18n/config.ts` | Locales, which pages are translated, path helpers (`localePath`, `hrefIn`) |
+| `lib/i18n/{es,fr,pt}/chrome.ts` | Header, sidebar, footer, search and cookie banner strings (keys are the English text) |
+| `lib/i18n/{es,fr,pt}/widget.ts` | Tool UI strings, quiz questions and analysis labels (sent only to tool pages) |
+| `lib/i18n/{es,fr,pt}/tools.ts`, `shapes*.ts`, `rest.ts` | Translated tool pages, face shape pages, the hub, type names and page-template labels |
+| `components/layout/LanguageSwitcher.tsx` | Language menu in the header and a one-time suggestion banner (never auto-redirects) |
+
+To translate a new UI string, wrap it in `t("…")`. `npx tsx scripts/i18n-keys.mts` lists every key, and `tests/i18n.test.ts`
+fails until each language has it.
 
 ## How the classifiers are calibrated
 
