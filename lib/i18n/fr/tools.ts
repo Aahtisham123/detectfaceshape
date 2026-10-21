@@ -3,7 +3,7 @@ import type { ToolT } from "../types";
 export const tools: Record<string, ToolT> = {
   "face-shape-detector": {
     name: "Détecteur de forme du visage",
-    short: "Trouvez la forme de votre visage à partir d'une photo ou de la caméra en direct.",
+    short: "Trouvez la forme de votre visage à partir d'une photo ou de votre caméra.",
     h1: "Détecteur de forme du visage",
     intro: "Importez une photo ou activez votre caméra : notre IA mesure votre front, vos pommettes, votre mâchoire et la longueur de votre visage pour vous dire laquelle des 10 formes de visage est la vôtre : ovale, rond, carré, allongé, rectangulaire, cœur, diamant, triangulaire, triangle inversé ou poire. C'est gratuit, cela prend environ cinq secondes et votre photo ne quitte jamais votre appareil.",
     body: `## Comment fonctionne le détecteur de forme du visage
@@ -31,9 +31,9 @@ export const tools: Record<string, ToolT> = {
 
 Comparez toutes les formes côte à côte dans notre [tableau des formes de visage](/fr/face-shapes/).
 
-## Mode caméra en direct (filtre forme du visage)
+## Utilisez votre caméra
 
-Appuyez sur **Utiliser ma caméra** pour voir un filtre de forme du visage en direct : le contour de votre visage et vos lignes de mesure vous suivent en temps réel, avec votre forme de visage actuelle affichée à l'écran. Appuyez sur **Capturer et analyser** pour une lecture complète.
+Appuyez sur **Utiliser ma caméra** pour ouvrir une caméra en plein écran avec un ovale pour cadrer votre visage. Après la photo, vous pouvez la **reprendre** ou la **recadrer**, puis l'IA mesure votre visage et affiche votre résultat.
 
 ## Comment prendre la bonne photo
 

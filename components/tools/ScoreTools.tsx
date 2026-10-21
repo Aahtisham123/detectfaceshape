@@ -18,7 +18,6 @@ export function SymmetryTest() {
     <FaceCapture
       guide="face"
       analyze={({ frame }) => analyzeSymmetry(frame)}
-      liveLabel={(frame) => t("Symmetry {n}", { n: analyzeSymmetry(frame).score })}
       render={(r) => (
         <>
           <ResultHeader eyebrow={t("Your symmetry score")} title={`${r.score} / 100`} />
@@ -93,7 +92,6 @@ export function CanthalTiltTest() {
     <FaceCapture
       guide="eyes"
       analyze={({ frame }) => analyzeCanthalTilt(frame)}
-      liveLabel={(frame) => signed(analyzeCanthalTilt(frame).average)}
       render={(r) => (
         <>
           <ResultHeader eyebrow={t("Your canthal tilt")} title={`${signed(r.average)} · ${t(r.category)}`} />

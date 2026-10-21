@@ -1,63 +1,61 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { getLandmarker, isLandmarkerReady, onLoadProgress, preloadLandmarker, setMode } from "@/lib/face/landmarker";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { getLandmarker, isLandmarkerReady, onLoadProgress, preloadModelFiles } from "@/lib/face/landmarker";
 import { normalizeFace, type FaceFrame } from "@/lib/face/normalize";
 import { drawOverlay, GUIDES } from "@/lib/face/draw";
 import { Icon } from "@/components/icons";
 import { toast } from "@/lib/toast";
 import { useT } from "@/lib/i18n/client";
+import AnalysisPanel from "./AnalysisPanel";
+
+const CameraSheet = dynamic(() => import("./CameraSheet"), { ssr: false });
 
 type Raw = { x: number; y: number; z: number }[];
-type Status = "idle" | "loading" | "live" | "analyzing" | "done" | "error";
+type Status = "idle" | "analyzing" | "done" | "error";
 
 export type CaptureInput = { frame: FaceFrame; raw: Raw; canvas: HTMLCanvasElement };
 
 type Props<R> = {
   analyze: (input: CaptureInput) => R | Promise<R>;
   render: (result: R, reset: () => void) => ReactNode;
-  /** Short text shown on the live camera feed, e.g. the current face shape. */
-  liveLabel?: (frame: FaceFrame) => string;
   guide?: keyof typeof GUIDES;
   title?: string;
+  /** Heading of the analysis screen, e.g. "Analyzing your face shape". */
+  analyzingTitle?: string;
   onResult?: (result: R) => void;
 };
 
 const MAX_SIDE = 1280;
+/** Each analysis step stays on screen at least this long, so the steps can be read. */
+const STEP_MS = 250;
+/** Share of the progress bar used by the model download; the other steps fill the rest. */
+const LOAD_SHARE = 0.7;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "face", title, onResult }: Props<R>) {
+export default function FaceCapture<R>({ analyze, render, guide = "face", title, analyzingTitle, onResult }: Props<R>) {
   const { t } = useT();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [result, setResult] = useState<R | null>(null);
-  const [label, setLabel] = useState("");
   const [dragging, setDragging] = useState(false);
-  // A photo is drawn on the canvas (shown behind the progress bar while the model finishes loading).
-  const [hasPhoto, setHasPhoto] = useState(false);
+  const [camera, setCamera] = useState(false);
+  const [photo, setPhoto] = useState("");
+  const [step, setStep] = useState(0);
+  const [stepProgress, setStepProgress] = useState(0);
   // Buttons stay disabled until hydration, so an early tap on a slow phone is never silently ignored.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
-  const [progress, setProgress] = useState(0);
-  useEffect(() => onLoadProgress(setProgress), []);
+  const [download, setDownload] = useState(0);
+  useEffect(() => onLoadProgress(setDownload), []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const overlayRef = useRef<HTMLCanvasElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const rafRef = useRef(0);
   const resultRef = useRef<HTMLDivElement>(null);
-
-  const stopCamera = useCallback(() => {
-    cancelAnimationFrame(rafRef.current);
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
-  }, []);
-
-  useEffect(() => stopCamera, [stopCamera]);
-
-  // Download the face model in the background once the tool is on screen and the page is idle,
-  // so it is usually ready before the visitor has picked a photo.
   const stageRef = useRef<HTMLDivElement>(null);
+
+  // Download the model files in the background once the tool is on screen and the page is idle,
+  // so they're usually here before the visitor has a photo. The model itself starts only after.
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -66,7 +64,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       if (!e.isIntersecting) return;
       io.disconnect();
       const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
-      idle = w.requestIdleCallback ? w.requestIdleCallback(preloadLandmarker, { timeout: 2500 }) : window.setTimeout(preloadLandmarker, 1200);
+      idle = w.requestIdleCallback ? w.requestIdleCallback(preloadModelFiles, { timeout: 2500 }) : window.setTimeout(preloadModelFiles, 1200);
     }, { rootMargin: "200px" });
     io.observe(stage);
     return () => {
@@ -82,27 +80,42 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   }, [status]);
 
   const fail = (msg: string) => {
-    stopCamera();
     setError(msg);
     setStatus("error");
     toast("error", msg);
   };
 
-  /** Runs the landmark model on whatever is drawn on the main canvas. */
-  const runOnCanvas = async () => {
+  /** Runs one analysis step, keeping it visible for at least STEP_MS. */
+  const runStep = async <T,>(n: number, work: () => T | Promise<T>): Promise<T> => {
+    setStep(n);
+    const started = performance.now();
+    const out = await work();
+    const left = STEP_MS - (performance.now() - started);
+    if (left > 0) await sleep(left);
+    setStepProgress(LOAD_SHARE + ((1 - LOAD_SHARE) * n) / 3);
+    return out;
+  };
+
+  /** Draws a photo onto the analysis canvas (scaled down), then analyzes it. */
+  const analyzePhoto = async (source: CanvasImageSource & { width: number; height: number }) => {
     const canvas = canvasRef.current!;
-    // Only say "measuring" once the model is actually here; until then show download progress.
-    setStatus(isLandmarkerReady() ? "analyzing" : "loading");
+    const scale = Math.min(1, MAX_SIDE / Math.max(source.width, source.height));
+    canvas.width = Math.round(source.width * scale);
+    canvas.height = Math.round(source.height * scale);
+    canvas.getContext("2d")!.drawImage(source, 0, 0, canvas.width, canvas.height);
+    setPhoto(canvas.toDataURL("image/jpeg", 0.85));
+    setError("");
+    setResult(null);
+    setStepProgress(0);
+    setStep(0);
+    setStatus("analyzing");
     try {
-      const lm = await getLandmarker();
-      setStatus("analyzing");
-      await setMode(lm, "IMAGE");
-      const res = lm.detect(canvas);
-      const raw = res.faceLandmarks[0] as Raw | undefined;
+      const lm = await runStep(0, getLandmarker);
+      const raw = await runStep(1, () => lm.detect(canvas).faceLandmarks[0] as Raw | undefined);
       if (!raw) return fail(t("We couldn't find a face. Use a clear, well-lit, front-facing photo with your whole face visible."));
-      const frame = normalizeFace(raw, canvas.width, canvas.height);
-      const out = await analyze({ frame, raw, canvas });
-      drawOverlay(canvas.getContext("2d")!, raw, canvas.width, canvas.height, guide);
+      const frame = await runStep(2, () => normalizeFace(raw, canvas.width, canvas.height));
+      const out = await runStep(3, () => analyze({ frame, raw, canvas }));
+      drawOverlay(canvas.getContext("2d")!, raw, canvas.width, canvas.height, guide, t);
       setResult(out);
       onResult?.(out);
       setStatus("done");
@@ -116,97 +129,46 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) return fail(t("Please choose an image file (JPG, PNG, WebP or HEIC)."));
-    stopCamera();
-    setStatus("loading");
-    setError("");
+    let bitmap: ImageBitmap;
     try {
-      const bitmap = await createImageBitmap(file);
-      const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
-      const canvas = canvasRef.current!;
-      canvas.width = Math.round(bitmap.width * scale);
-      canvas.height = Math.round(bitmap.height * scale);
-      canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-      bitmap.close();
-      setHasPhoto(true);
-      await runOnCanvas();
+      bitmap = await createImageBitmap(file);
     } catch {
-      fail(t("That image couldn't be opened. Try a JPG or PNG."));
+      return fail(t("That image couldn't be opened. Try a JPG or PNG."));
     }
+    await analyzePhoto(bitmap);
+    bitmap.close();
   };
 
-  const startCamera = async () => {
-    setHasPhoto(false);
-    setError("");
-    setStatus("loading");
-    try {
-      const [stream, lm] = await Promise.all([
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false }),
-        getLandmarker(),
-      ]);
-      streamRef.current = stream;
-      const video = videoRef.current!;
-      video.srcObject = stream;
-      await video.play();
-      await setMode(lm, "VIDEO");
-      setStatus("live");
-      let last = 0;
-      const loop = (now: number) => {
-        rafRef.current = requestAnimationFrame(loop);
-        if (now - last < 80 || video.readyState < 2) return;
-        last = now;
-        const overlay = overlayRef.current;
-        if (!overlay) return;
-        overlay.width = video.videoWidth;
-        overlay.height = video.videoHeight;
-        const ctx = overlay.getContext("2d")!;
-        ctx.clearRect(0, 0, overlay.width, overlay.height);
-        const res = lm.detectForVideo(video, now);
-        const raw = res.faceLandmarks[0] as Raw | undefined;
-        if (!raw) {
-          setLabel(t("Looking for your face…"));
-          return;
-        }
-        drawOverlay(ctx, raw, overlay.width, overlay.height, guide);
-        if (liveLabel) setLabel(liveLabel(normalizeFace(raw, overlay.width, overlay.height)));
-      };
-      rafRef.current = requestAnimationFrame(loop);
-    } catch (e) {
-      const name = (e as Error).name;
-      fail(
-        t(name === "NotAllowedError"
-          ? "Camera access was blocked. Allow the camera in your browser settings, or upload a photo instead."
-          : "We couldn't start your camera. Upload a photo instead."),
-      );
-    }
-  };
-
-  const capture = async () => {
-    const video = videoRef.current!;
-    const canvas = canvasRef.current!;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d")!.drawImage(video, 0, 0);
-    stopCamera();
-    await runOnCanvas();
+  const cameraError = (e: unknown) => {
+    setCamera(false);
+    fail(
+      t((e as Error)?.name === "NotAllowedError"
+        ? "Camera access was blocked. Allow the camera in your browser settings, or upload a photo instead."
+        : "We couldn't start your camera. Upload a photo instead."),
+    );
   };
 
   const reset = () => {
-    stopCamera();
     setResult(null);
-    setHasPhoto(false);
+    setPhoto("");
     setStatus("idle");
     setError("");
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const showCanvas = status === "analyzing" || status === "done" || (status === "loading" && hasPhoto);
+  // While the model downloads, step 1 fills most of the bar; later steps fill the rest.
+  const progress = step === 0 ? (isLandmarkerReady() ? LOAD_SHARE : download * LOAD_SHARE) : stepProgress;
+  const busy = status === "analyzing";
 
   return (
     <div className="capture">
       {title && <h2 className="capture-title">{title}</h2>}
+      {busy && <AnalysisPanel photo={photo} step={step} progress={progress} title={analyzingTitle ?? t("Analyzing your face")} />}
+      {/* The stage stays mounted (hidden while analyzing) so the photo on its canvas survives between screens. */}
       <div
         ref={stageRef}
-        className={`stage${dragging ? " dragging" : ""}${showCanvas || status === "live" ? " has-media" : ""}`}
+        hidden={busy}
+        className={`stage${dragging ? " dragging" : ""}${status === "done" ? " has-media" : ""}`}
         onDragOver={(e) => {
           e.preventDefault();
           setDragging(true);
@@ -218,49 +180,25 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
           loadFile(e.dataTransfer.files[0]);
         }}
       >
-        <canvas ref={canvasRef} className="stage-canvas" hidden={!showCanvas} aria-label={t("Your photo with measurement guides")} />
-        <div className="live" hidden={status !== "live"}>
-          <video ref={videoRef} playsInline muted className="mirror" />
-          <canvas ref={overlayRef} className="mirror overlay" />
-          {label && <div className="live-label">{label}</div>}
-        </div>
-        {(status === "idle" || status === "error" || (status === "loading" && !hasPhoto)) && (
+        <canvas ref={canvasRef} className="stage-canvas" hidden={status !== "done"} aria-label={t("Your photo with measurement guides")} />
+        {status !== "done" && (
           <div className="stage-empty">
             <FaceIcon />
             <p className="stage-hint">{t("Drop a photo here, upload one, or use your camera.")}</p>
             <p className="stage-tip">{t("Tip: face the camera straight on, hair pulled back, neutral expression, good light.")}</p>
           </div>
         )}
-        {status === "analyzing" && <div className="scan-line" aria-hidden="true" />}
-        {(status === "loading" || status === "analyzing") && (
-          <div className="stage-busy" role="status">
-            <span className="spinner" />
-            {status === "loading" && !isLandmarkerReady() ? (
-              <span className="load-progress">
-                {t("Loading the AI model… {n}%", { n: Math.round(progress * 100) })}
-                <span className="load-bar" aria-hidden="true"><span style={{ transform: `scaleX(${progress})` }} /></span>
-              </span>
-            ) : (
-              t(status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…")
-            )}
-          </div>
-        )}
       </div>
 
-      <div className="capture-actions">
-        {status === "live" ? (
-          <>
-            <button className="btn primary" onClick={capture}><Icon name="Camera" size={18} /> {t("Capture & analyze")}</button>
-            <button className="btn" onClick={reset}><Icon name="X" size={18} /> {t("Stop camera")}</button>
-          </>
-        ) : status === "done" ? (
+      <div className="capture-actions" hidden={busy}>
+        {status === "done" ? (
           <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> {t("Try another photo")}</button>
         ) : (
           <>
-            <button className="btn primary" onClick={() => { getLandmarker().catch(() => {}); fileRef.current?.click(); }} disabled={!ready || status === "loading" || status === "analyzing"}>
+            <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={!ready || busy}>
               <Icon name="Upload" size={18} /> {t("Upload a photo")}
             </button>
-            <button className="btn" onClick={startCamera} disabled={!ready || status === "loading" || status === "analyzing"}>
+            <button className="btn" onClick={() => { setError(""); setCamera(true); }} disabled={!ready || busy}>
               <Icon name="Camera" size={18} /> {t("Use my camera")}
             </button>
           </>
@@ -268,6 +206,17 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => loadFile(e.target.files?.[0])} />
       </div>
       <p className="privacy-note"><Icon name="ShieldCheck" size={16} /> {t("Your photo never leaves your device. All analysis runs in your browser.")}</p>
+
+      {camera && (
+        <CameraSheet
+          onClose={() => setCamera(false)}
+          onError={cameraError}
+          onPhoto={(shot) => {
+            setCamera(false);
+            analyzePhoto(shot);
+          }}
+        />
+      )}
 
       {status === "error" && (
         <div className="alert" role="alert">

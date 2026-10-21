@@ -68,6 +68,9 @@ export function collectKeys() {
   for (const m of classify.matchAll(/label: "([^"]+)"/g)) widget.add(m[1]);
   for (const m of classify.matchAll(/"(positive|neutral|negative) canthal tilt"/g)) widget.add(m[0].slice(1, -1));
   ["positive", "neutral", "negative"].forEach((k) => widget.add(k));
+  // Step and badge labels of the analysis screen.
+  for (const m of read("components/tools/AnalysisPanel.tsx").matchAll(/(?:STEPS|BADGES) = \[([^\]]+)\]/g)) for (const k of m[1].matchAll(/"([^"]+)"/g)) widget.add(k[1]);
+  for (const m of read("lib/face/draw.ts").matchAll(/label: "([^"]+)"/g)) widget.add(m[1]);
   for (const m of read("lib/face/features.ts").matchAll(/label: "([^"]+)"/g)) widget.add(m[1]);
   for (const m of read("lib/face/normalize.ts").matchAll(/warnings\.push\("([^"]+)"\)/g)) widget.add(m[1]);
   ["Eyes", "Eyebrows", "Nose", "Mouth", "Jaw", "Cheeks"].forEach((k) => widget.add(k)); // symmetry regions

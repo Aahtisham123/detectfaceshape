@@ -3,7 +3,7 @@ import type { ToolT } from "../types";
 export const tools: Record<string, ToolT> = {
   "face-shape-detector": {
     name: "Detector de forma de cara",
-    short: "Descubre tu forma de cara con una foto o la cámara en vivo.",
+    short: "Descubre tu forma de cara con una foto o tu cámara.",
     h1: "Detector de forma de cara",
     intro: "Sube una foto o activa la cámara y nuestra IA mide tu frente, pómulos, mandíbula y largo de la cara para decirte cuál de las 10 formas de cara tienes: ovalada, redonda, cuadrada, alargada, rectangular, corazón, diamante, triangular, triángulo invertido o pera. Es gratis, tarda unos cinco segundos y tu foto nunca sale de tu dispositivo.",
     body: `## Cómo funciona el detector de forma de cara
@@ -31,9 +31,9 @@ export const tools: Record<string, ToolT> = {
 
 Mira todas las formas lado a lado en nuestra [tabla de formas de cara](/es/face-shapes/).
 
-## Modo cámara en vivo (filtro de forma de cara)
+## Usa tu cámara
 
-Toca **Usar mi cámara** para ver un filtro de forma de cara en vivo: el contorno de tu cara y tus líneas de medición te siguen en tiempo real, con tu forma de cara actual en pantalla. Pulsa **Capturar y analizar** para obtener una lectura completa.
+Toca **Usar mi cámara** para abrir una cámara a pantalla completa con una guía ovalada para encuadrar tu cara. Después de tomar la foto puedes **repetirla** o **recortarla**, y luego la IA mide tu cara y te muestra el resultado.
 
 ## Cómo hacer la foto correcta
 

@@ -15,15 +15,12 @@ const EMOJI: Record<string, string> = {
 };
 
 export default function FaceShapeDetector() {
-  const nameOf = useLite().shapeName;
+  const { t } = useT();
   return (
     <FaceCapture<FaceShapeResult>
       guide="face"
+      analyzingTitle={t("Analyzing your face shape")}
       analyze={({ frame }) => classifyFaceShape(frame)}
-      liveLabel={(frame) => {
-        const r = classifyFaceShape(frame);
-        return `${nameOf(r.shape)} · ${Math.round(r.confidence)}%`;
-      }}
       render={(r) => <FaceShapeResultView r={r} />}
     />
   );

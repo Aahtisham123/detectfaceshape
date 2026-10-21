@@ -30,7 +30,7 @@ Node 20.9+ is required.
 | Path | What lives there |
 |---|---|
 | `lib/face/` | Landmark indices, pose normalization, measurements, calibrated classifiers (face, eyes, nose, lips, jaw, symmetry, golden ratio, attractiveness), skin hue sampling |
-| `components/tools/` | `FaceCapture` (upload / live camera / overlay) and every tool widget; `ToolWidget` code-splits them per page |
+| `components/tools/` | `FaceCapture` (upload, full-screen camera with crop/retake in `CameraSheet`, step-by-step `AnalysisPanel`, measurement overlay) and every tool widget; `ToolWidget` code-splits them per page |
 | `lib/content/` | All page content as data: face shapes, type hubs (eyes, nose, lips, head, jawline, Kibbe), tools, blog posts |
 | `lib/quizLogic.ts` | Pure scoring for the face shape calculator, Kibbe test and color seasons |
 | `app/(site)/` | Pages: `/`, `/[tool or hub]/`, `/[hub]/[type]/`, `/face-shapes/…`, `/blog/…`, about, methodology, privacy, author |
@@ -49,7 +49,7 @@ Node 20.9+ is required.
 
 ## URL map
 
-- `/` Face Shape Detector (main tool, live camera "face shape filter")
+- `/` Face Shape Detector (main tool)
 - `/face-shapes/` hub, `/face-shapes/{shape}/`, `/face-shapes/{shape}/{hairstyles-women|hairstyles-men|celebrities|glasses}/`, `/face-shapes/men/`, `/face-shapes/women/`
 - Tools: `/face-shape-quiz/`, `/face-shape-calculator/`, `/eye-shape-detector/`, `/nose-shape-detector/`, `/lip-shape-analyzer/`, `/face-symmetry-test/`, `/golden-ratio-face/`, `/attractiveness-test/`, `/how-old-do-i-look/`, `/head-shape-detector/`, `/jawline-analyzer/`, `/skin-undertone-test/`, `/color-analysis/`, `/foundation-shade-finder/`, `/kibbe-body-type-test/`, `/canthal-tilt-calculator/`, `/facial-proportions-calculator/`, `/face-comparison/`
 - Guides (separate from tools): `/eye-shapes/`, `/nose-shapes/`, `/lip-shapes/`, `/head-shapes/`, `/jawline-shapes/`, `/kibbe-body-types/`, each with one page per type

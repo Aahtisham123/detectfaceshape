@@ -21,7 +21,7 @@ const FEATURES = [
   { icon: "Target", title: "Calibrated on real faces", text: "We compare your proportions with measurements from real photos, not drawings." },
   { icon: "Layers", title: "Shows your blend", text: "Most faces mix two shapes, so you see a percentage match for all ten." },
   { icon: "Scissors", title: "Advice you can use", text: "Every result links to haircuts, glasses, beards and makeup for your shape." },
-  { icon: "Camera", title: "Live camera mode", text: "Watch your face shape update in real time, then capture for a full reading." },
+  { icon: "Camera", title: "Full-screen camera", text: "Frame your face with an oval guide, then retake or crop the photo before the AI reads it." },
   { icon: "Share2", title: "Share your result", text: "Save a result card for Instagram, TikTok or Pinterest. It never includes your photo." },
 ] as const;
 

@@ -41,7 +41,7 @@ export const TOOLS: Tool[] = [
     slug: "face-shape-detector",
     path: "/",
     name: "Face Shape Detector",
-    short: "Find your face shape from a photo or live camera.",
+    short: "Find your face shape from a photo or your camera.",
     keyword: "face shape detector",
     title: "Face Shape Detector: What Is My Face Shape? (Free AI, No Upload)",
     description:
@@ -74,9 +74,9 @@ export const TOOLS: Tool[] = [
 
 See every shape side by side in our [face shapes chart](/face-shapes/).
 
-## Live camera mode (face shape filter)
+## Use your camera
 
-Tap **Use my camera** to see a live face shape filter: the outline of your face and your measurement lines track you in real time, with your current face shape on screen. Press **Capture & analyze** for a full reading.
+Tap **Use my camera** to open a full-screen camera with an oval guide for framing your face. After you take the photo you can **retake** it or **crop** it, then the AI measures your face and shows your result.
 
 ${PHOTO_TIPS}
 

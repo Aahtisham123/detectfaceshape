@@ -3,7 +3,7 @@ import type { ToolT } from "../types";
 export const tools: Record<string, ToolT> = {
   "face-shape-detector": {
     name: "Detector de Formato de Rosto",
-    short: "Descubra o formato do seu rosto por foto ou câmera ao vivo.",
+    short: "Descubra o formato do seu rosto por foto ou pela câmera.",
     h1: "Detector de Formato de Rosto",
     intro: "Envie uma foto ou ligue a câmera, e nossa IA mede sua testa, maçãs do rosto, mandíbula e o comprimento do rosto para dizer qual dos 10 formatos de rosto você tem: oval, redondo, quadrado, oblongo, retangular, coração, diamante, triangular, triângulo invertido ou pera. É grátis, leva cerca de cinco segundos e sua foto nunca sai do seu dispositivo.",
     body: `## Como funciona o detector de formato de rosto
@@ -31,9 +31,9 @@ export const tools: Record<string, ToolT> = {
 
 Veja todos os formatos lado a lado no nosso [guia de formatos de rosto](/pt/face-shapes/).
 
-## Modo câmera ao vivo (filtro de formato de rosto)
+## Use sua câmera
 
-Toque em **Usar minha câmera** para ver um filtro de formato de rosto ao vivo: o contorno do seu rosto e as linhas de medição acompanham você em tempo real, com o seu formato de rosto atual na tela. Pressione **Capturar e analisar** para uma leitura completa.
+Toque em **Usar minha câmera** para abrir uma câmera em tela cheia com um guia oval para enquadrar seu rosto. Depois de tirar a foto, você pode **tirar outra** ou **cortá-la**, e então a IA mede seu rosto e mostra o resultado.
 
 ## Como tirar a foto certa
 

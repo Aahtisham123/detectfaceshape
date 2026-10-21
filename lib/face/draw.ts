@@ -42,6 +42,8 @@ export function drawOverlay(
   w: number,
   h: number,
   guide: keyof typeof GUIDES = "face",
+  /** Translates the guide labels. */
+  t: (s: string) => string = (s) => s,
 ) {
   const p = (i: number): P => ({ x: raw[i].x * w, y: raw[i].y * h });
   const unit = Math.max(w, h) / 400;
@@ -70,7 +72,7 @@ export function drawOverlay(
       ctx.arc(q.x, q.y, 3 * unit, 0, Math.PI * 2);
       ctx.fill();
     }
-    if (g.label) ctx.fillText(g.label, Math.max(a.x, b.x) + 6 * unit, (a.y + b.y) / 2);
+    if (g.label) ctx.fillText(t(g.label), Math.max(a.x, b.x) + 6 * unit, (a.y + b.y) / 2);
   }
   ctx.restore();
 }

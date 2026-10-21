@@ -1,5 +1,5 @@
 import {
-  ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, ChevronRight, CircleAlert,
+  ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, Crop, SwitchCamera, LoaderCircle, ChevronRight, CircleAlert,
   CircleCheck, CircleHelp, CircleUser, Clock, Compass, Cookie, Copy, Crown, Diamond, Droplet, Eye, FileText, Fingerprint,
   FlipHorizontal2, Gauge, Gem, GitCompare, Glasses, Grid3x3, Heart, Hexagon, House, Info, Layers, Lightbulb, ListChecks, Lock,
   Globe, Languages, Mail, Menu, MessageSquare, PanelLeftClose, PanelLeftOpen, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,
@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 const ICONS = {
-  ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, ChevronRight, CircleAlert,
+  ArrowRight, ArrowUp, BookOpen, Brain, Brush, CalendarDays, Calculator, Camera, Check, ChevronDown, Crop, SwitchCamera, LoaderCircle, ChevronRight, CircleAlert,
   CircleCheck, CircleHelp, CircleUser, Clock, Compass, Cookie, Copy, Crown, Diamond, Droplet, Eye, FileText, Fingerprint,
   FlipHorizontal2, Gauge, Gem, GitCompare, Glasses, Grid3x3, Heart, Hexagon, House, Info, Layers, Lightbulb, ListChecks, Lock,
   Globe, Languages, Mail, Menu, MessageSquare, PanelLeftClose, PanelLeftOpen, Palette, Pipette, Quote, Ratio, RotateCcw, Ruler, ScanFace, Scissors, Search, SearchX, Share2, Shapes, ShieldCheck,

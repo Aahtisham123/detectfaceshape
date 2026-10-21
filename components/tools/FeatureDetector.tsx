@@ -29,7 +29,6 @@ export default function FeatureDetector({ kind }: { kind: Kind }) {
     <FaceCapture<Generic>
       guide={cfg.guide}
       analyze={({ frame }) => cfg.analyze(frame)}
-      liveLabel={(frame) => label(cfg.analyze(frame).shape)}
       render={(r) => {
         const it = item(r.shape);
         return (
