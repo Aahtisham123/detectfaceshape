@@ -5,6 +5,7 @@ import { SITE } from "@/lib/site";
 import { Icon } from "@/components/icons";
 import CopyButton from "@/components/ui/CopyButton";
 import { toast } from "@/lib/toast";
+import { useT } from "@/lib/i18n/client";
 
 /** Draws a shareable 1080×1350 result card (for TikTok / Instagram / Pinterest) on a canvas. No photo is included. */
 function drawCard(headline: string, value: string, sub: string, emoji: string) {
@@ -36,22 +37,23 @@ function drawCard(headline: string, value: string, sub: string, emoji: string) {
 }
 
 export default function ShareCard({ headline, value, sub, emoji = "✨", path }: { headline: string; value: string; sub: string; emoji?: string; path: string }) {
+  const { t } = useT();
   const [busy, setBusy] = useState(false);
   const share = async () => {
     const canvas = drawCard(headline, value, sub, emoji);
     const blob: Blob | null = await new Promise((r) => canvas.toBlob(r, "image/png"));
-    if (!blob) return toast("error", "Couldn't create your result card. Try again.");
+    if (!blob) return toast("error", t("Couldn't create your result card. Try again."));
     const file = new File([blob], "my-result.png", { type: "image/png" });
-    const text = `${headline} ${value} ${emoji} Find yours at ${SITE.url.replace("https://", "")}`;
+    const text = `${headline} ${value} ${emoji} ${t("Find yours at {site}", { site: SITE.url.replace("https://", "") })}`;
     const url = `${SITE.url}${path}?utm_source=share&utm_medium=result_card`;
     try {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], text, url });
-        toast("success", "Thanks for sharing!");
+        toast("success", t("Thanks for sharing!"));
         return;
       }
     } catch (e) {
-      if ((e as Error).name !== "AbortError") toast("error", "Sharing failed. We'll download the card instead.");
+      if ((e as Error).name !== "AbortError") toast("error", t("Sharing failed. We'll download the card instead."));
       else return;
     }
     const a = document.createElement("a");
@@ -59,14 +61,14 @@ export default function ShareCard({ headline, value, sub, emoji = "✨", path }:
     a.download = "my-result.png";
     a.click();
     URL.revokeObjectURL(a.href);
-    toast("success", "Result card downloaded. Post it and tag us!");
+    toast("success", t("Result card downloaded. Post it and tag us!"));
   };
   return (
     <div className="share">
       <button className="btn primary" disabled={busy} onClick={async () => { setBusy(true); await share(); setBusy(false); }}>
-        <Icon name="Share2" size={16} /> Share my result card
+        <Icon name="Share2" size={16} /> {t("Share my result card")}
       </button>
-      <CopyButton text={`${headline} ${value} ${emoji} ${SITE.url}${path}`} label="Copy result" className="btn" />
+      <CopyButton text={`${headline} ${value} ${emoji} ${SITE.url}${path}`} label={t("Copy result")} className="btn" />
     </div>
   );
 }

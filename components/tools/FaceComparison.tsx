@@ -7,6 +7,7 @@ import { classifyFaceShape } from "@/lib/face/faceShape";
 import { faceSimilarity } from "@/lib/face/features";
 import type { Pt } from "@/lib/face/geometry";
 import { useLite } from "./LiteContext";
+import { useT } from "@/lib/i18n/client";
 
 type Face = { pts: Pt[]; shape: string };
 
@@ -18,6 +19,7 @@ const toScore = (d: number) => Math.round(Math.max(0, Math.min(100, 100 - (d - 0
 
 export default function FaceComparison() {
   const nameOf = useLite().shapeName;
+  const { t } = useT();
   const [a, setA] = useState<Face | null>(null);
   const [b, setB] = useState<Face | null>(null);
   const analyze = ({ frame }: { frame: { pts: Pt[] } & Parameters<typeof classifyFaceShape>[0] }) => ({ pts: frame.pts, shape: classifyFaceShape(frame).shape });
@@ -25,18 +27,18 @@ export default function FaceComparison() {
   return (
     <div className="compare">
       <div className="compare-grid">
-        <FaceCapture<Face> title="Face 1" analyze={analyze} onResult={setA} render={(r) => <p>Face shape: <strong>{nameOf(r.shape)}</strong></p>} />
-        <FaceCapture<Face> title="Face 2" analyze={analyze} onResult={setB} render={(r) => <p>Face shape: <strong>{nameOf(r.shape)}</strong></p>} />
+        <FaceCapture<Face> title={t("Face 1")} analyze={analyze} onResult={setA} render={(r) => <p>{t("Face shape:")} <strong>{nameOf(r.shape)}</strong></p>} />
+        <FaceCapture<Face> title={t("Face 2")} analyze={analyze} onResult={setB} render={(r) => <p>{t("Face shape:")} <strong>{nameOf(r.shape)}</strong></p>} />
       </div>
       {score !== null && a && b && (
         <div className="result">
-          <ResultHeader eyebrow="Facial geometry similarity" title={`${score}%`} />
-          <ScoreDial value={score} label="How similar the two face shapes are" />
+          <ResultHeader eyebrow={t("Facial geometry similarity")} title={`${score}%`} />
+          <ScoreDial value={score} label={t("How similar the two face shapes are")} />
           <p>
-            {score >= 80 ? "Very similar facial geometry." : score >= 55 ? "Some clear similarities in proportions." : "Quite different facial proportions."}{" "}
-            {a.shape === b.shape ? `You share the same face shape: ${nameOf(a.shape)}.` : `Face 1 is ${nameOf(a.shape)}; face 2 is ${nameOf(b.shape)}.`}
+            {t(score >= 80 ? "Very similar facial geometry." : score >= 55 ? "Some clear similarities in proportions." : "Quite different facial proportions.")}{" "}
+            {a.shape === b.shape ? t("You share the same face shape: {shape}.", { shape: nameOf(a.shape) }) : t("Face 1 is {a}; face 2 is {b}.", { a: nameOf(a.shape), b: nameOf(b.shape) })}
           </p>
-          <p className="fine">This compares shape and proportions only. It is not face recognition and can't tell whether two photos show the same person.</p>
+          <p className="fine">{t("This compares shape and proportions only. It is not face recognition and can't tell whether two photos show the same person.")}</p>
         </div>
       )}
     </div>

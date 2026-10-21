@@ -6,6 +6,7 @@ import { normalizeFace, type FaceFrame } from "@/lib/face/normalize";
 import { drawOverlay, GUIDES } from "@/lib/face/draw";
 import { Icon } from "@/components/icons";
 import { toast } from "@/lib/toast";
+import { useT } from "@/lib/i18n/client";
 
 type Raw = { x: number; y: number; z: number }[];
 type Status = "idle" | "loading" | "live" | "analyzing" | "done" | "error";
@@ -25,6 +26,7 @@ type Props<R> = {
 const MAX_SIDE = 1280;
 
 export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "face", title, onResult }: Props<R>) {
+  const { t } = useT();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [result, setResult] = useState<R | null>(null);
@@ -69,23 +71,23 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       await setMode(lm, "IMAGE");
       const res = lm.detect(canvas);
       const raw = res.faceLandmarks[0] as Raw | undefined;
-      if (!raw) return fail("We couldn't find a face. Use a clear, well-lit, front-facing photo with your whole face visible.");
+      if (!raw) return fail(t("We couldn't find a face. Use a clear, well-lit, front-facing photo with your whole face visible."));
       const frame = normalizeFace(raw, canvas.width, canvas.height);
       const out = await analyze({ frame, raw, canvas });
       drawOverlay(canvas.getContext("2d")!, raw, canvas.width, canvas.height, guide);
       setResult(out);
       onResult?.(out);
       setStatus("done");
-      toast("success", frame.warnings.length ? "Done! See the tips below for a more accurate reading." : "Analysis complete. Your result is ready.");
+      toast("success", t(frame.warnings.length ? "Done! See the tips below for a more accurate reading." : "Analysis complete. Your result is ready."));
     } catch (e) {
       console.error(e);
-      fail("The face model couldn't run in this browser. Try an up-to-date Chrome, Safari, Edge or Firefox.");
+      fail(t("The face model couldn't run in this browser. Try an up-to-date Chrome, Safari, Edge or Firefox."));
     }
   };
 
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) return fail("Please choose an image file (JPG, PNG, WebP or HEIC).");
+    if (!file.type.startsWith("image/")) return fail(t("Please choose an image file (JPG, PNG, WebP or HEIC)."));
     stopCamera();
     setStatus("loading");
     setError("");
@@ -99,7 +101,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       bitmap.close();
       await runOnCanvas();
     } catch {
-      fail("That image couldn't be opened. Try a JPG or PNG.");
+      fail(t("That image couldn't be opened. Try a JPG or PNG."));
     }
   };
 
@@ -118,20 +120,20 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       await setMode(lm, "VIDEO");
       setStatus("live");
       let last = 0;
-      const loop = (t: number) => {
+      const loop = (now: number) => {
         rafRef.current = requestAnimationFrame(loop);
-        if (t - last < 80 || video.readyState < 2) return;
-        last = t;
+        if (now - last < 80 || video.readyState < 2) return;
+        last = now;
         const overlay = overlayRef.current;
         if (!overlay) return;
         overlay.width = video.videoWidth;
         overlay.height = video.videoHeight;
         const ctx = overlay.getContext("2d")!;
         ctx.clearRect(0, 0, overlay.width, overlay.height);
-        const res = lm.detectForVideo(video, t);
+        const res = lm.detectForVideo(video, now);
         const raw = res.faceLandmarks[0] as Raw | undefined;
         if (!raw) {
-          setLabel("Looking for your face…");
+          setLabel(t("Looking for your face…"));
           return;
         }
         drawOverlay(ctx, raw, overlay.width, overlay.height, guide);
@@ -141,9 +143,9 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
     } catch (e) {
       const name = (e as Error).name;
       fail(
-        name === "NotAllowedError"
+        t(name === "NotAllowedError"
           ? "Camera access was blocked. Allow the camera in your browser settings, or upload a photo instead."
-          : "We couldn't start your camera. Upload a photo instead.",
+          : "We couldn't start your camera. Upload a photo instead."),
       );
     }
   };
@@ -184,7 +186,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
           loadFile(e.dataTransfer.files[0]);
         }}
       >
-        <canvas ref={canvasRef} className="stage-canvas" hidden={!showCanvas} aria-label="Your photo with measurement guides" />
+        <canvas ref={canvasRef} className="stage-canvas" hidden={!showCanvas} aria-label={t("Your photo with measurement guides")} />
         <div className="live" hidden={status !== "live"}>
           <video ref={videoRef} playsInline muted className="mirror" />
           <canvas ref={overlayRef} className="mirror overlay" />
@@ -193,14 +195,14 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
         {(status === "idle" || status === "error" || status === "loading") && (
           <div className="stage-empty">
             <FaceIcon />
-            <p className="stage-hint">Drop a photo here, upload one, or use your camera.</p>
-            <p className="stage-tip">Tip: face the camera straight on, hair pulled back, neutral expression, good light.</p>
+            <p className="stage-hint">{t("Drop a photo here, upload one, or use your camera.")}</p>
+            <p className="stage-tip">{t("Tip: face the camera straight on, hair pulled back, neutral expression, good light.")}</p>
           </div>
         )}
         {status === "analyzing" && <div className="scan-line" aria-hidden="true" />}
         {(status === "loading" || status === "analyzing") && (
           <div className="stage-busy" role="status">
-            <span className="spinner" /> {status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…"}
+            <span className="spinner" /> {t(status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…")}
           </div>
         )}
       </div>
@@ -208,38 +210,38 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       <div className="capture-actions">
         {status === "live" ? (
           <>
-            <button className="btn primary" onClick={capture}><Icon name="Camera" size={18} /> Capture &amp; analyze</button>
-            <button className="btn" onClick={reset}><Icon name="X" size={18} /> Stop camera</button>
+            <button className="btn primary" onClick={capture}><Icon name="Camera" size={18} /> {t("Capture & analyze")}</button>
+            <button className="btn" onClick={reset}><Icon name="X" size={18} /> {t("Stop camera")}</button>
           </>
         ) : status === "done" ? (
-          <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> Try another photo</button>
+          <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> {t("Try another photo")}</button>
         ) : (
           <>
             <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={!ready || status === "loading" || status === "analyzing"}>
-              <Icon name="Upload" size={18} /> Upload a photo
+              <Icon name="Upload" size={18} /> {t("Upload a photo")}
             </button>
             <button className="btn" onClick={startCamera} disabled={!ready || status === "loading" || status === "analyzing"}>
-              <Icon name="Camera" size={18} /> Use my camera
+              <Icon name="Camera" size={18} /> {t("Use my camera")}
             </button>
           </>
         )}
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => loadFile(e.target.files?.[0])} />
       </div>
-      <p className="privacy-note"><Icon name="ShieldCheck" size={16} /> Your photo never leaves your device. All analysis runs in your browser.</p>
+      <p className="privacy-note"><Icon name="ShieldCheck" size={16} /> {t("Your photo never leaves your device. All analysis runs in your browser.")}</p>
 
       {status === "error" && (
         <div className="alert" role="alert">
           <Icon name="TriangleAlert" size={22} />
           <div>
-            <strong>Something went wrong</strong>
+            <strong>{t("Something went wrong")}</strong>
             <p>{error}</p>
           </div>
-          <button className="btn sm" onClick={reset}><Icon name="RotateCcw" size={16} /> Try again</button>
+          <button className="btn sm" onClick={reset}><Icon name="RotateCcw" size={16} /> {t("Try again")}</button>
         </div>
       )}
       {status === "done" && result !== null && (
         <div className="result" ref={resultRef}>
-          <p className="success-banner"><Icon name="CircleCheck" size={18} /> Analysis complete</p>
+          <p className="success-banner"><Icon name="CircleCheck" size={18} /> {t("Analysis complete")}</p>
           {render(result, reset)}
         </div>
       )}

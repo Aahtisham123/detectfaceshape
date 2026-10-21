@@ -3,6 +3,7 @@
 import FaceCapture from "./FaceCapture";
 import ShareCard from "./ShareCard";
 import { ResultHeader, Warnings } from "./ui";
+import { useT } from "@/lib/i18n/client";
 
 type HumanLike = { load: () => Promise<void>; detect: (input: HTMLCanvasElement) => Promise<{ face: { age?: number }[] }> };
 let human: Promise<HumanLike> | null = null;
@@ -41,6 +42,7 @@ function getHuman() {
 }
 
 export default function AgeGuesser() {
+  const { t } = useT();
   return (
     <FaceCapture<{ age: number | null; warnings: string[] }>
       guide="face"
@@ -52,15 +54,15 @@ export default function AgeGuesser() {
       }}
       render={(r) =>
         r.age === null ? (
-          <p>We found your face but couldn't estimate an age. Try a sharper, well-lit photo.</p>
+          <p>{t("We found your face but couldn't estimate an age. Try a sharper, well-lit photo.")}</p>
         ) : (
           <>
-            <ResultHeader eyebrow="You look about" title={`${r.age} years old`}>
-              <p className="result-lead">Likely range: {Math.max(1, r.age - 6)}–{r.age + 6}</p>
+            <ResultHeader eyebrow={t("You look about")} title={t("{n} years old", { n: r.age })}>
+              <p className="result-lead">{t("Likely range: {from}–{to}", { from: Math.max(1, r.age - 6), to: r.age + 6 })}</p>
             </ResultHeader>
-            <p className="fine">Age models are rough. Lighting, expression, makeup and image quality all move the estimate. Try a few photos.</p>
-            <Warnings items={r.warnings} />
-            <ShareCard headline="AI says I look" value={`${r.age}`} sub="years old" emoji="🎂" path="/how-old-do-i-look/" />
+            <p className="fine">{t("Age models are rough. Lighting, expression, makeup and image quality all move the estimate. Try a few photos.")}</p>
+            <Warnings title={t("For a more accurate reading:")} items={r.warnings.map((x) => t(x))} />
+            <ShareCard headline={t("AI says I look")} value={`${r.age}`} sub={t("years old")} emoji="🎂" path="/how-old-do-i-look/" />
           </>
         )
       }

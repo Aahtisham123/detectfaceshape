@@ -6,12 +6,16 @@ import { TYPE_HUBS } from "./content/typeHubs";
 import { TOOLS } from "./content/tools";
 import { POSTS } from "./content/blog";
 import { IMG, ILLUSTRATED_HUBS } from "./images";
+import { OTHER_LOCALES, localePath, type Locale } from "./i18n/config";
+import { contentFor, pageT } from "./i18n/server";
 
 export type PageSeo = {
   path: string;
   title: string;
   description: string;
   section: "Tool" | "Face shape" | "Guide" | "Blog" | "Page";
+  /** Page language (English when omitted). */
+  locale?: Locale;
   /** Main illustration (WebP) shown on the page and listed in the image sitemap. */
   image?: string;
   imageAlt?: string;
@@ -168,7 +172,28 @@ export function allPages(): PageSeo[] {
     const shape = p.shapes?.[0];
     pages.push({ path: `/blog/${p.slug}/`, title, description, section: "Blog", ...(shape ? { image: IMG.faceShape(shape), imageAlt: `${shape.replace("-", " ")} face shape diagram` } : {}) });
   }
+  pages.push(...localizedPages(pages));
   return pages;
+}
+
+/** Translated versions of the homepage, every tool, the face shapes hub and the 10 shape pages. */
+function localizedPages(english: PageSeo[]): PageSeo[] {
+  const out: PageSeo[] = [];
+  for (const locale of OTHER_LOCALES) {
+    const c = contentFor(locale)!;
+    const t = pageT(locale);
+    const en = (path: string) => english.find((p) => p.path === path)!;
+    for (const tool of TOOLS) {
+      const tx = c.tools[tool.slug];
+      out.push({ ...en(tool.path), path: localePath(locale, tool.path), title: tx.title, description: tx.description, locale, ...(tool.path === "/" ? { imageAlt: t("AI face shape detector measuring forehead, cheekbone and jaw width on a face outline") } : {}) });
+    }
+    out.push({ ...en("/face-shapes/"), path: localePath(locale, "/face-shapes/"), title: c.hub.title, description: c.hub.description, locale, imageAlt: t("Chart of the 10 face shapes with forehead, cheekbone and jaw width lines") });
+    for (const s of FACE_SHAPES) {
+      const sx = c.shapes[s.slug];
+      out.push({ ...en(`/face-shapes/${s.slug}/`), path: localePath(locale, `/face-shapes/${s.slug}/`), title: sx.title, description: sx.description, locale, imageAlt: t("{Shape} face shape diagram with forehead, cheekbone and jaw width lines", { Shape: sx.name, shape: sx.name.toLowerCase() }) });
+    }
+  }
+  return out;
 }
 
 let byPath: Map<string, PageSeo> | null = null;

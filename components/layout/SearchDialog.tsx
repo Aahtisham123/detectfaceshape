@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "@/components/icons";
+import { useT } from "@/lib/i18n/client";
 
-type Entry = { t: string; p: string; d: string; s: string };
+/** t = title, p = path, d = description, s = section, l = language. */
+type Entry = { t: string; p: string; d: string; s: string; l: string };
 
 let cache: Promise<Entry[]> | null = null;
 const load = () => (cache ??= fetch("/search-index.json").then((r) => r.json()).catch(() => ((cache = null), [])));
@@ -35,6 +37,13 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
   const input = useRef<HTMLInputElement>(null);
+  const { t, locale } = useT();
+  // Pages in the current language, plus English pages that have no translation yet.
+  const scoped = useMemo(() => {
+    const own = entries.filter((e) => e.l === locale);
+    const ownPaths = new Set(own.map((e) => (locale === "en" ? e.p : e.p.slice(locale.length + 1))));
+    return locale === "en" ? own : [...own, ...entries.filter((e) => e.l === "en" && !ownPaths.has(e.p))];
+  }, [entries, locale]);
 
   useEffect(() => {
     if (!open) return;
@@ -45,21 +54,21 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  const results = useMemo(() => searchEntries(entries, q), [entries, q]);
+  const results = useMemo(() => searchEntries(scoped, q), [scoped, q]);
   useEffect(() => setSel(0), [q]);
   if (!open) return null;
 
   return (
     <div className="search-overlay" onClick={onClose}>
-      <div className="search-panel" role="dialog" aria-modal="true" aria-label="Search" onClick={(e) => e.stopPropagation()}>
+      <div className="search-panel" role="dialog" aria-modal="true" aria-label={t("Search")} onClick={(e) => e.stopPropagation()}>
         <div className="search-input">
           <Icon name="Search" size={20} />
           <input
             ref={input}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search: oval face, hooded eyes, golden ratio…"
-            aria-label="Search the site"
+            placeholder={t("Search: oval face, hooded eyes, golden ratio…")}
+            aria-label={t("Search the site")}
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") setSel((s) => Math.min(s + 1, results.length - 1));
               if (e.key === "ArrowUp") setSel((s) => Math.max(s - 1, 0));
@@ -68,17 +77,17 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
               }
             }}
           />
-          <button className="icon-btn" aria-label="Close search" onClick={onClose}><Icon name="X" size={18} /></button>
+          <button className="icon-btn" aria-label={t("Close search")} onClick={onClose}><Icon name="X" size={18} /></button>
         </div>
         <ul className="search-results">
           {q && !results.length && (
-            <li className="search-empty"><Icon name="SearchX" size={22} /> No results for &ldquo;{q}&rdquo;. Try &ldquo;face shape&rdquo; or &ldquo;eyes&rdquo;.</li>
+            <li className="search-empty"><Icon name="SearchX" size={22} /> {t("No results for “{q}”. Try “face shape” or “eyes”.", { q })}</li>
           )}
-          {!q && <li className="search-empty"><Icon name="Lightbulb" size={20} /> Try &ldquo;heart face hairstyles&rdquo;, &ldquo;canthal tilt&rdquo; or &ldquo;undertone&rdquo;.</li>}
+          {!q && <li className="search-empty"><Icon name="Lightbulb" size={20} /> {t("Try “heart face hairstyles”, “canthal tilt” or “undertone”.")}</li>}
           {results.map((r, i) => (
             <li key={r.p}>
               <Link href={r.p} className={i === sel ? "selected" : undefined} onClick={onClose} onMouseEnter={() => setSel(i)}>
-                <span className="search-kind">{r.s}</span>
+                <span className="search-kind">{t(r.s)}</span>
                 <strong>{r.t}</strong>
                 <span className="search-desc">{r.d}</span>
               </Link>

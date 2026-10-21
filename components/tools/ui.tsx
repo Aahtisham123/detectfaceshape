@@ -59,11 +59,11 @@ export function Traits({ items }: { items: string[] }) {
   );
 }
 
-export function Warnings({ items }: { items: string[] }) {
+export function Warnings({ items, title = "For a more accurate reading:" }: { items: string[]; title?: string }) {
   if (!items.length) return null;
   return (
     <div className="warnings" role="note">
-      <strong>For a more accurate reading:</strong>
+      <strong>{title}</strong>
       <ul>{items.map((w) => <li key={w}>{w}</li>)}</ul>
     </div>
   );

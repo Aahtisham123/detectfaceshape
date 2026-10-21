@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { LiteProvider } from "./LiteContext";
 import type { Lite } from "@/lib/content/lite";
+import { WidgetDictProvider } from "@/lib/i18n/client";
+import type { Dict } from "@/lib/i18n/translate";
 
 const loading = () => <div className="capture stage-placeholder" aria-hidden="true" />;
 
@@ -30,7 +32,11 @@ const WIDGETS: Record<string, React.ComponentType> = {
   "face-comparison": dynamic(() => import("./FaceComparison"), { loading }),
 };
 
-export default function ToolWidget({ slug, lite }: { slug: string; lite: Lite }) {
+export default function ToolWidget({ slug, lite }: { slug: string; lite: Lite & { dict: Dict } }) {
   const W = WIDGETS[slug];
-  return W ? <LiteProvider value={lite}><W /></LiteProvider> : null;
+  return W ? (
+    <WidgetDictProvider value={lite.dict}>
+      <LiteProvider value={lite}><W /></LiteProvider>
+    </WidgetDictProvider>
+  ) : null;
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/icons";
+import { useT } from "@/lib/i18n/client";
 
 /** Thin reading-progress bar under the sticky header. */
 export function ScrollProgress() {
@@ -25,6 +26,7 @@ export function ScrollProgress() {
 }
 
 export function BackToTop() {
+  const { t } = useT();
   const [show, setShow] = useState(false);
   useEffect(() => {
     const on = () => setShow(window.scrollY > 700);
@@ -32,7 +34,7 @@ export function BackToTop() {
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
-    <button className={`back-to-top${show ? " show" : ""}`} aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} tabIndex={show ? 0 : -1}>
+    <button className={`back-to-top${show ? " show" : ""}`} aria-label={t("Back to top")} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} tabIndex={show ? 0 : -1}>
       <Icon name="ArrowUp" size={20} />
     </button>
   );
@@ -42,6 +44,7 @@ const CONSENT_KEY = "fsd-cookie-consent";
 
 /** We only use essential storage; the banner records the visitor's choice for any future analytics. */
 export function CookieBanner() {
+  const { t } = useT();
   const [open, setOpen] = useState(false);
   useEffect(() => {
     try {
@@ -58,14 +61,14 @@ export function CookieBanner() {
   };
   if (!open) return null;
   return (
-    <div className="cookie-banner" role="dialog" aria-label="Cookie preferences">
+    <div className="cookie-banner" role="dialog" aria-label={t("Cookie preferences")}>
       <Icon name="Cookie" size={22} />
       <p>
-        We use only essential storage to run this site. Your photos never leave your device. <a href="/privacy/">Privacy policy</a>
+        {t("We use only essential storage to run this site. Your photos never leave your device.")} <a href="/privacy/">{t("Privacy policy")}</a>
       </p>
       <div className="cookie-actions">
-        <button className="btn sm" onClick={() => choose("essential")}>Essential only</button>
-        <button className="btn sm primary" onClick={() => choose("accepted")}>Accept</button>
+        <button className="btn sm" onClick={() => choose("essential")}>{t("Essential only")}</button>
+        <button className="btn sm primary" onClick={() => choose("accepted")}>{t("Accept")}</button>
       </div>
     </div>
   );

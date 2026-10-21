@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Icon } from "@/components/icons";
 import { toast } from "@/lib/toast";
+import { useT } from "@/lib/i18n/client";
 
 export type QuizOption = { label: string; scores: Record<string, number> };
 export type QuizQuestion = { q: string; help?: string; options: QuizOption[] };
@@ -18,6 +19,7 @@ export default function Quiz({
   /** Optional step shown after the last question (e.g. photo check); returns extra scores. */
   extra?: (done: (scores: Record<string, number>) => void) => ReactNode;
 }) {
+  const { t } = useT();
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
   const [step, setStep] = useState(0);
   const [bonus, setBonus] = useState<Record<string, number> | null>(extra ? null : {});
@@ -32,7 +34,7 @@ export default function Quiz({
 
   const finished = done && bonus !== null;
   useEffect(() => {
-    if (finished) toast("success", "All done! Here's your result.");
+    if (finished) toast("success", t("All done! Here's your result."));
   }, [finished]);
 
   const reset = () => {
@@ -45,21 +47,21 @@ export default function Quiz({
   if (done)
     return (
       <div className="quiz result">
-        <p className="success-banner"><Icon name="CircleCheck" size={18} /> Quiz complete</p>
+        <p className="success-banner"><Icon name="CircleCheck" size={18} /> {t("Quiz complete")}</p>
         {render(totals, reset)}
-        <button className="btn" onClick={reset}><Icon name="RotateCcw" size={16} /> Retake the quiz</button>
+        <button className="btn" onClick={reset}><Icon name="RotateCcw" size={16} /> {t("Retake the quiz")}</button>
       </div>
     );
 
   const q = questions[step];
   return (
     <div className="quiz" key={step}>
-      <div className="quiz-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={step} aria-valuetext={`Question ${step + 1} of ${questions.length}`}>
+      <div className="quiz-progress" role="progressbar" aria-label={t("Quiz progress")} aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={step} aria-valuetext={t("Question {n} of {total}", { n: step + 1, total: questions.length })}>
         <span style={{ width: `${(step / questions.length) * 100}%` }} />
       </div>
-      <p className="eyebrow">Question {step + 1} of {questions.length}</p>
-      <h2 className="quiz-q">{q.q}</h2>
-      {q.help && <p className="quiz-help">{q.help}</p>}
+      <p className="eyebrow">{t("Question {n} of {total}", { n: step + 1, total: questions.length })}</p>
+      <h2 className="quiz-q">{t(q.q)}</h2>
+      {q.help && <p className="quiz-help">{t(q.help)}</p>}
       <div className="quiz-options">
         {q.options.map((o, i) => (
           <button
@@ -72,12 +74,12 @@ export default function Quiz({
               setStep(step + 1);
             }}
           >
-            <span>{o.label}</span>
+            <span>{t(o.label)}</span>
             <Icon name={answers[step] === i ? "CircleCheck" : "ChevronRight"} size={18} />
           </button>
         ))}
       </div>
-      {step > 0 && <button className="btn link" onClick={() => setStep(step - 1)}><Icon name="ChevronRight" size={16} style={{ transform: "rotate(180deg)" }} /> Back</button>}
+      {step > 0 && <button className="btn link" onClick={() => setStep(step - 1)}><Icon name="ChevronRight" size={16} style={{ transform: "rotate(180deg)" }} /> {t("Back")}</button>}
     </div>
   );
 }

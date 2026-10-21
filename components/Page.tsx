@@ -4,18 +4,22 @@ import type { Faq } from "@/lib/content/types";
 import { md } from "@/lib/markdown";
 import { SITE } from "@/lib/site";
 import { TOOLS } from "@/lib/content/tools";
+
+const toolText = (locale: Locale, slug: string) => toolFor(locale, slug);
 import { NAV } from "@/lib/nav";
 import { TESTIMONIALS } from "@/lib/content/testimonials";
 import { Icon, type IconName } from "@/components/icons";
 import { sizeOf } from "@/lib/images";
+import { hrefIn, type Locale } from "@/lib/i18n/config";
+import { pageT, toolFor } from "@/lib/i18n/server";
 
 export function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }
 
-export function Breadcrumbs({ items }: { items: { name: string; path: string }[] }) {
+export function Breadcrumbs({ items, label = "Breadcrumb" }: { items: { name: string; path: string }[]; label?: string }) {
   return (
-    <nav aria-label="Breadcrumb" className="crumbs">
+    <nav aria-label={label} className="crumbs">
       <ol>
         {items.map((it, i) => (
           <li key={it.path}>
@@ -51,17 +55,19 @@ export function FaqList({ faqs, title = "Frequently asked questions" }: { faqs: 
   );
 }
 
-const fmtDate = (d: string) => new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+const fmtDate = (d: string, locale: Locale = "en") =>
+  new Date(d).toLocaleDateString({ en: "en-US", es: "es-ES", fr: "fr-FR", pt: "pt-BR" }[locale], { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function Byline({ updated = SITE.updated, readMinutes }: { updated?: string; readMinutes?: number }) {
+export function Byline({ updated = SITE.updated, readMinutes, locale = "en" }: { updated?: string; readMinutes?: number; locale?: Locale }) {
+  const t = pageT(locale);
   return (
     <p className="byline">
       <span className="avatar" aria-hidden="true">AA</span>
       <span>
-        By <Link href={`/authors/${SITE.author.slug}/`} rel="author">{SITE.author.name}</Link>
+        {t("By")} <Link href={`/authors/${SITE.author.slug}/`} rel="author">{SITE.author.name}</Link>
       </span>
-      <span className="byline-meta"><Icon name="CalendarDays" size={15} /> Last updated <time dateTime={updated}>{fmtDate(updated)}</time></span>
-      {readMinutes ? <span className="byline-meta"><Icon name="Clock" size={15} /> {readMinutes} min read</span> : null}
+      <span className="byline-meta"><Icon name="CalendarDays" size={15} /> {t("Last updated")} <time dateTime={updated}>{fmtDate(updated, locale)}</time></span>
+      {readMinutes ? <span className="byline-meta"><Icon name="Clock" size={15} /> {t("{n} min read", { n: readMinutes })}</span> : null}
     </p>
   );
 }
@@ -70,26 +76,27 @@ export const readingTime = (...texts: string[]) => Math.max(2, Math.round(texts.
 
 const toolIcon = (path: string): IconName => NAV.flatMap((g) => g.items).find((i) => i.href === path)?.icon ?? "Sparkles";
 
-export function RelatedTools({ slugs, title = "Related tools" }: { slugs: string[]; title?: string }) {
+export function RelatedTools({ slugs, title, locale = "en" }: { slugs: string[]; title?: string; locale?: Locale }) {
+  const t = pageT(locale);
   const tools = slugs.map((s) => TOOLS.find((t) => t.slug === s)).filter((t): t is NonNullable<typeof t> => Boolean(t));
   if (!tools.length) return null;
   return (
     <section className="related" data-reveal>
-      <h2><Icon name="Zap" size={24} className="h-icon" /> {title}</h2>
+      <h2><Icon name="Zap" size={24} className="h-icon" /> {title ?? t("Related tools")}</h2>
       <div className="card-grid">
-        {tools.map((t) => <ToolCard key={t.slug} name={t.name} short={t.short} path={t.path} />)}
+        {tools.map((tool) => <ToolCard key={tool.slug} name={toolText(locale, tool.slug).name} short={toolText(locale, tool.slug).short} path={tool.path} locale={locale} />)}
       </div>
     </section>
   );
 }
 
-export function ToolCard({ name, short, path }: { name: string; short: string; path: string }) {
+export function ToolCard({ name, short, path, locale = "en" }: { name: string; short: string; path: string; locale?: Locale }) {
   return (
-    <Link href={path} className="card tool-card">
+    <Link href={hrefIn(locale, path)} className="card tool-card">
       <span className="card-icon"><Icon name={toolIcon(path)} size={22} /></span>
       <strong>{name}</strong>
       <span>{short}</span>
-      <span className="card-go">Open tool <Icon name="ArrowRight" size={15} /></span>
+      <span className="card-go">{pageT(locale)("Open tool")} <Icon name="ArrowRight" size={15} /></span>
     </Link>
   );
 }
@@ -112,31 +119,33 @@ export function Figure({ src, alt, caption, priority = false, className }: { src
   );
 }
 
-export function KeyTakeaways({ items }: { items: string[] }) {
+export function KeyTakeaways({ items, locale = "en" }: { items: string[]; locale?: Locale }) {
+  const title = pageT(locale)("Key takeaways");
   return (
-    <aside className="takeaways" aria-label="Key takeaways" data-reveal>
-      <p className="takeaways-title"><Icon name="Lightbulb" size={18} /> Key takeaways</p>
+    <aside className="takeaways" aria-label={title} data-reveal>
+      <p className="takeaways-title"><Icon name="Lightbulb" size={18} /> {title}</p>
       <ul>{items.map((t) => <li key={t}>{t}</li>)}</ul>
     </aside>
   );
 }
 
-export function Testimonials() {
+export function Testimonials({ locale = "en" }: { locale?: Locale }) {
+  const t = pageT(locale);
   if (!TESTIMONIALS.length) {
     return (
       <section className="feedback-cta" data-reveal>
         <Icon name="MessageSquare" size={26} />
         <div>
-          <h2>Tried it? Tell us how it went</h2>
-          <p>We read every message and use your feedback to make the detector more accurate. Share your result, a suggestion or a bug.</p>
+          <h2>{t("Tried it? Tell us how it went")}</h2>
+          <p>{t("We read every message and use your feedback to make the detector more accurate. Share your result, a suggestion or a bug.")}</p>
         </div>
-        <a className="btn" href={`mailto:${SITE.email}?subject=Face%20Shape%20Detector%20feedback`}><Icon name="Mail" size={16} /> Send feedback</a>
+        <a className="btn" href={`mailto:${SITE.email}?subject=Face%20Shape%20Detector%20feedback`}><Icon name="Mail" size={16} /> {t("Send feedback")}</a>
       </section>
     );
   }
   return (
     <section className="testimonials" data-reveal>
-      <h2><Icon name="Users" size={24} className="h-icon" /> What people say</h2>
+      <h2><Icon name="Users" size={24} className="h-icon" /> {t("What people say")}</h2>
       <div className="testimonial-grid">
         {TESTIMONIALS.map((t) => (
           <figure key={t.name + t.quote.slice(0, 20)} className="testimonial">
