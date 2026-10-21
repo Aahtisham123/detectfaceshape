@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
       // One canonical host: non-www.
       {
         source: "/:path*",
-        has: [{ type: "host", value: "www.detectfaceshape.ai" }],
-        destination: "https://detectfaceshape.ai/:path*",
+        has: [{ type: "host", value: "www.detectfaceshape.cc" }],
+        destination: "https://detectfaceshape.cc/:path*",
         permanent: true,
       },
     ];

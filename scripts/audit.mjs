@@ -2,7 +2,7 @@
 // Usage: npm run build && npm start & npm run audit [-- http://localhost:3000]
 const BASE = process.argv[2] ?? "http://localhost:3000";
 // Origin the build was made for (canonicals/sitemap); pass as the 2nd argument if not the default.
-const ORIGIN = process.argv[3] ?? "https://detectfaceshape.ai";
+const ORIGIN = process.argv[3] ?? "https://detectfaceshape.cc";
 const issues = [];
 const status = new Map();
 const report = (url, msg) => issues.push(`${url.replace(BASE, "")}: ${msg}`);

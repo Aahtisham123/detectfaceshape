@@ -33,7 +33,7 @@ Our tools are not directed at children under 13.
 
 ## Contact
 
-Questions? Email privacy@detectfaceshape.ai.
+Questions? Email privacy@detectfaceshape.cc.
 
 _Last updated: October 19, 2026._`;
 

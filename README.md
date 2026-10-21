@@ -1,4 +1,4 @@
-# Face Shape Detector (detectfaceshape.ai)
+# Face Shape Detector (detectfaceshape.cc)
 
 Free AI face shape detector and face analysis tools, built with Next.js (App Router) and fully static.
 Every photo is analyzed **in the browser**. Nothing is uploaded.
@@ -67,10 +67,10 @@ and `lib/face/classify.ts` (`NORMS`). Recalibrate them if you swap the landmark 
 
 Designed for Vercel (or any Next.js host):
 
-1. Import the repo; the default build command works. Set `NEXT_PUBLIC_SITE_URL=https://detectfaceshape.ai` once the custom domain is live (until then canonicals follow Vercel's production domain automatically; preview deployments are sent `X-Robots-Tag: noindex`). `postinstall` copies the WASM runtime.
-2. Add `detectfaceshape.ai` as the primary domain and redirect `www` to it at the domain level. `next.config.ts` also redirects `www`.
+1. Import the repo; the default build command works. The site's public origin defaults to `https://detectfaceshape.cc` (canonicals, sitemap, robots.txt, JSON-LD, OG images); set `NEXT_PUBLIC_SITE_URL` only to override it. Preview deployments are sent `X-Robots-Tag: noindex`.
+2. Add `detectfaceshape.cc` as the primary domain and redirect `www` to it at the domain level. `next.config.ts` also redirects `www`.
 3. Production deploys from `main`. Commits must be authored with an email on the GitHub account linked to the Vercel account (here `ahtipazeer@gmail.com`); on the Hobby plan Vercel skips pushes from unknown authors. If a push doesn't deploy, use **Deployments → Create Deployment** with branch `main`.
-4. Submit `https://detectfaceshape.ai/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
+4. Submit `https://detectfaceshape.cc/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
 
 ## Before launch
 

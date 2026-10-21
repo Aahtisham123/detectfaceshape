@@ -25,7 +25,7 @@ Face Shape Detector is built and written by [${SITE.author.name}](/authors/${SIT
 
 ## Contact
 
-Spotted a mistake or want to suggest a tool? Email hello@detectfaceshape.ai.`;
+Spotted a mistake or want to suggest a tool? Email hello@detectfaceshape.cc.`;
 
 export default function About() {
   return <StaticPage title="About Face Shape Detector" path="/about/" body={body} icon="Info" extra={organization()} />;
