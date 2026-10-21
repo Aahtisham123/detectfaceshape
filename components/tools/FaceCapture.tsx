@@ -28,6 +28,7 @@ type Props<R> = {
 };
 
 const MAX_SIDE = 1280;
+const PHOTO_TYPES = "image/jpeg,image/png,image/webp,image/heic,image/heif,image/avif,.jpg,.jpeg,.png,.webp,.heic,.heif,.avif";
 /** Each analysis step stays on screen at least this long, so the steps can be read. */
 const STEP_MS = 250;
 /** Share of the progress bar used by the model download; the other steps fill the rest. */
@@ -128,7 +129,7 @@ export default function FaceCapture<R>({ analyze, render, guide = "face", title,
 
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) return fail(t("Please choose an image file (JPG, PNG, WebP or HEIC)."));
+    if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|heic|heif|avif)$/i.test(file.name)) return fail(t("Please choose an image file (JPG, PNG, WebP or HEIC)."));
     let bitmap: ImageBitmap;
     try {
       bitmap = await createImageBitmap(file);
@@ -203,7 +204,9 @@ export default function FaceCapture<R>({ analyze, render, guide = "face", title,
             </button>
           </>
         )}
-        <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => loadFile(e.target.files?.[0])} />
+        {/* Exact types instead of image/*: mobile browsers then open the photo picker without offering the
+            system camera app; taking a photo always happens in the in-browser camera. */}
+        <input ref={fileRef} type="file" accept={PHOTO_TYPES} hidden onChange={(e) => loadFile(e.target.files?.[0])} />
       </div>
       <p className="privacy-note"><Icon name="ShieldCheck" size={16} /> {t("Your photo never leaves your device. All analysis runs in your browser.")}</p>
 
