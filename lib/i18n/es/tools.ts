@@ -93,7 +93,7 @@ Salones, barberías y ópticas pueden insertar este test gratis. [Obtén el cód
       { q: "¿Cómo sé mi forma de cara sin una foto?", a: "Haz este test mirándote al espejo, o mide tu cara con una cinta métrica y usa la calculadora de forma de cara." },
       { q: "¿Es preciso el test de forma de cara?", a: "Es tan preciso como tus respuestas. Para un resultado medido, usa también el detector con foto." },
     ],
-    title: "Test de forma de cara: ¿qué forma tengo? (7 preguntas)",
+    title: "Test de forma de cara: ¿qué forma de cara tengo?",
     description: "Haz nuestro test gratis de forma de cara y descúbrela sin foto. Siete preguntas rápidas sobre tu frente, pómulos, mandíbula y barbilla.",
   },
   "face-shape-calculator": {
@@ -163,7 +163,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Puede detectar ojos encapotados?", a: "Calcula el encapotado según cuánto espacio de párpado se ve bajo la ceja. Confírmalo en un espejo, ya que el pliegue en sí no se detecta." },
     ],
     title: "Detector de forma de ojos: test gratis con IA",
-    description: "Descubre tu forma de ojos con una foto: almendrados, redondos, encapotados, monopárpado, rasgados, caídos o saltones, más separación e inclinación.",
+    description: "Descubre tu forma de ojos con una foto: almendrados, redondos, encapotados, monopárpado, rasgados, caídos o saltones, y su separación. Gratis.",
   },
   "nose-shape-detector": {
     name: "Detector de forma de nariz",
@@ -271,7 +271,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Por qué mi puntuación de simetría es baja?", a: "Normalmente porque tenías la cabeza girada o inclinada. Mira a la cámara de frente con una expresión neutra." },
     ],
     title: "Test de simetría facial: ¿qué tan simétrica es?",
-    description: "Mide la simetría de tu cara con una foto. Reflejamos 37 pares de puntos faciales sobre tu línea media y puntuamos ojos, cejas, nariz, boca y mandíbula.",
+    description: "Mide la simetría de tu cara con una foto. Reflejamos 37 pares de puntos sobre tu línea media y puntuamos ojos, cejas, nariz, boca y mandíbula.",
   },
   "golden-ratio-face": {
     name: "Calculadora de proporción áurea facial",
@@ -313,7 +313,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Cuál es una buena puntuación de proporción áurea?", a: "La mayoría de las personas obtienen entre 55 y 80. Es solo por diversión; no hay evidencia sólida de que la proporción áurea defina la belleza." },
     ],
     title: "Proporción áurea facial: calculadora gratis",
-    description: "¿Qué tan cerca está tu cara de la proporción áurea (1.618)? Nuestra calculadora gratis mide 7 proporciones faciales con una foto y puntúa cada una.",
+    description: "¿Qué tan cerca está tu cara de la proporción áurea (1.618)? Nuestra calculadora gratis mide 7 proporciones faciales con una foto.",
   },
   "attractiveness-test": {
     name: "Test de atractivo",
@@ -351,7 +351,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Por qué cambió mi puntuación entre fotos?", a: "El ángulo de la cabeza, la iluminación, la expresión y la distorsión del lente cambian las medidas." },
     ],
     title: "Test de atractivo: puntúa tu cara (IA gratis)",
-    description: "Una puntuación facial gratis con IA, solo por diversión, basada en simetría, proporción áurea, tercios, inclinación cantal y mandíbula. Foto privada.",
+    description: "Puntuación facial gratis con IA, solo por diversión, según simetría, proporción áurea, tercios, inclinación cantal y mandíbula.",
   },
   "how-old-do-i-look": {
     name: "¿Cuántos años aparento?",
@@ -401,7 +401,7 @@ Mira todas las [formas de cabeza](/head-shapes/).`,
       { q: "¿Cómo sé qué forma de cabeza tengo?", a: "Alísate el pelo hacia abajo y hazte una foto de perfil. Comprueba si la parte de atrás de tu cabeza se curva hacia fuera o cae recta, y compara el ancho con el largo." },
     ],
     title: "Detector de forma de cabeza: ¿cómo es la mía?",
-    description: "Descubre tu forma de cabeza (redonda, ovalada, larga, cuadrada, plana por detrás u ovoide) con un test guiado, más los cortes que mejor te quedan.",
+    description: "Descubre tu forma de cabeza (redonda, ovalada, larga, cuadrada, plana por detrás u ovoide) con un test guiado y los cortes que te quedan.",
   },
   "jawline-analyzer": {
     name: "Analizador de mandíbula",
@@ -436,7 +436,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Cuál es un buen ángulo mandibular?", a: "Un ángulo de unos 120–130° en la esquina de la mandíbula se ve definido; los ángulos mayores se ven más suaves." },
     ],
     title: "Analizador de mandíbula: mide tu mandíbula gratis",
-    description: "Mide el ángulo y el ancho de tu mandíbula y tu barbilla con una foto. Descubre tu tipo (cuadrada, redondeada, en V, puntiaguda, ancha o estrecha).",
+    description: "Mide el ángulo y ancho de tu mandíbula y tu barbilla con una foto. Descubre tu tipo (cuadrada, redondeada, en V, puntiaguda, ancha o estrecha).",
   },
   "skin-undertone-test": {
     name: "Test de subtono de piel",
@@ -489,8 +489,8 @@ Responde según tu color de pelo natural, sin maquillaje y con luz natural. Una 
       { q: "¿Qué estación soy en el análisis de color?", a: "Haz el test: puntúa tu subtono, profundidad y contraste y los asigna a Primavera, Verano, Otoño o Invierno, además de una subestación." },
       { q: "¿Puede cambiar mi estación?", a: "Tu colorido natural es estable, pero el pelo teñido o el bronceado pueden cambiar durante un tiempo qué colores te quedan mejor." },
     ],
-    title: "Análisis de color por estaciones: ¿qué estación soy?",
-    description: "Descubre tu paleta de color (Primavera, Verano, Otoño o Invierno y tu subestación) con un test gratis según tu subtono, profundidad y contraste.",
+    title: "Análisis de color: ¿qué estación soy? (test)",
+    description: "Descubre tu paleta (Primavera, Verano, Otoño o Invierno y tu subestación) con un test de análisis de color según subtono, profundidad y contraste.",
   },
   "foundation-shade-finder": {
     name: "Buscador de tono de base",
@@ -516,7 +516,7 @@ Aplica dos o tres tonos en la línea de la mandíbula, no en la mano, y revísal
       { q: "¿La base debe coincidir con la cara o con el cuello?", a: "Con la línea de la mandíbula, para que la cara y el cuello se fundan." },
     ],
     title: "Buscador de tono de base: encuentra el tuyo",
-    description: "Encuentra tu tono de base según tu profundidad y subtono con un test rápido. Aprende a leer los códigos (W, C, N, O) y a probarlo con luz natural.",
+    description: "Encuentra tu tono de base según tu profundidad y subtono con un test rápido. Aprende a leer los códigos (W, C, N, O) y a probarlo.",
   },
   "kibbe-body-type-test": {
     name: "Test de tipo de cuerpo Kibbe",
@@ -542,7 +542,7 @@ Mira los [13 tipos de cuerpo Kibbe](/kibbe-body-types/).`,
       { q: "¿Kibbe es lo mismo que la forma del cuerpo?", a: "No. Kibbe analiza la estructura ósea y los rasgos en conjunto, no las proporciones de cadera y cintura." },
     ],
     title: "Test Kibbe: descubre tu tipo de cuerpo gratis",
-    description: "Haz nuestro test Kibbe gratis y descubre tu tipo de cuerpo. 12 preguntas sobre tu estructura ósea, cuerpo y cara para saber cuál de los 13 tipos eres.",
+    description: "Haz nuestro test Kibbe gratis y descubre tu tipo de cuerpo. 12 preguntas sobre tus huesos, cuerpo y cara para saber cuál de los 13 tipos eres.",
   },
   "canthal-tilt-calculator": {
     name: "Calculadora de inclinación cantal",
@@ -601,7 +601,7 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Cuáles son las proporciones faciales ideales?", a: "Unos tercios faciales iguales y una cara de unos cinco anchos de ojo son pautas artísticas clásicas. Las caras reales varían mucho." },
     ],
     title: "Proporciones faciales: calculadora de tercios",
-    description: "Mide tus tercios y quintos faciales con una foto. Compara tu parte superior, media e inferior de la cara y comprueba si encajas en la regla de los quintos.",
+    description: "Calculadora de proporciones faciales: mide tus tercios y quintos con una foto y compara la parte superior, media e inferior de tu cara.",
   },
   "face-comparison": {
     name: "Comparador de caras",
@@ -623,6 +623,6 @@ El análisis se realiza por completo en tu navegador con un modelo facial que fu
       { q: "¿Esto es reconocimiento facial?", a: "No. Solo compara la geometría y las proporciones, y no puede identificar a personas." },
     ],
     title: "Comparador de caras: ¿qué tan parecidas son?",
-    description: "Compara dos caras y obtén una puntuación de similitud según su geometría. Mira si hermanos, padres e hijos o amigos tienen formas de cara parecidas.",
+    description: "Compara dos caras y obtén una puntuación de similitud por su geometría. ¿Tienen hermanos, padres e hijos o amigos formas de cara parecidas?",
   },
 };

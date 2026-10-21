@@ -98,7 +98,7 @@ export const items: LocaleContent["items"] = {
       "Les yeux sans pli n'ont pas de pli visible sur la paupière supérieure : celle-ci forme une surface lisse et continue des cils jusqu'au sourcil. Ils sont particulièrement fréquents chez les personnes d'origine est-asiatique.",
   },
   "eye-shapes/upturned": {
-    name: "Yeux en amande relevés",
+    name: "Yeux relevés",
     definition:
       "Les yeux relevés ont les coins externes plus hauts que les coins internes, ce qui donne un regard étiré, façon « œil de chat ». En termes de mesure, leur inclinaison canthale est positive.",
   },
@@ -441,7 +441,7 @@ export const pages: Dict = {
   "Woman with an oval face shape": "Femme au visage ovale",
   "face shapes scored": "formes de visage évaluées",
   "facial landmarks measured": "points du visage mesurés",
-  "photos uploaded, ever": "photo envoyée, jamais",
+  "photos uploaded, ever": "photo envoyée sur nos serveurs",
   "to your result": "jusqu'à votre résultat",
   "{Shape} Face": "Visage {shape}",
   "{Shape} Face Shape": "Forme de visage {shape}",

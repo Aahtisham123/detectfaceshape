@@ -448,7 +448,7 @@ export const pages: Dict = {
   "Woman with an oval face shape": "Mulher com rosto oval",
   "face shapes scored": "formatos de rosto avaliados",
   "facial landmarks measured": "pontos faciais medidos",
-  "photos uploaded, ever": "fotos enviadas, nunca",
+  "photos uploaded, ever": "fotos enviadas até hoje",
   "to your result": "até o seu resultado",
   "{Shape} Face": "Rosto {shape}",
   "{Shape} Face Shape": "Formato de rosto {shape}",

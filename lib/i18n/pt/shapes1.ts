@@ -4,7 +4,7 @@ export const shapesA: Record<string, ShapeT> = {
   oval: {
     name: "Oval",
     title: "Rosto oval: características, cortes e óculos",
-    description: "O rosto oval é cerca de 1,5× mais longo que largo, com maçãs do rosto mais largas e mandíbula suave. Veja como identificar e os melhores cortes.",
+    description: "O rosto oval é cerca de 1,5× mais longo que largo, com maçãs do rosto mais largas e mandíbula suave. Veja como identificar e os cortes ideais.",
     definition: "O formato de rosto oval é cerca de uma vez e meia mais longo do que largo. As maçãs do rosto são o ponto mais largo, a testa é um pouco mais larga que a mandíbula e a linha do maxilar se curva suavemente até um queixo arredondado, sem ângulos marcados.",
     measurements: [
       { feature: "Comprimento x largura do rosto", value: "Cerca de 1,4–1,6× mais longo que largo" },
@@ -101,7 +101,7 @@ A diferença é o comprimento. Um rosto oval é cerca de 1,5× mais longo que la
   round: {
     name: "Redondo",
     title: "Rosto redondo: como identificar, cortes e óculos",
-    description: "O rosto redondo é quase tão largo quanto longo, com bochechas cheias e mandíbula suave. Veja como identificar e os cortes, óculos e barbas ideais.",
+    description: "O rosto redondo é quase tão largo quanto longo, com bochechas cheias e mandíbula suave. Veja como identificar e os melhores cortes e óculos.",
     definition: "O formato de rosto redondo é mais ou menos tão largo quanto longo. As bochechas são a parte mais larga e cheia, a mandíbula é suave e sem cantos visíveis, e o queixo é arredondado. Como largura e comprimento são parecidos, o contorno lembra um círculo.",
     measurements: [
       { feature: "Comprimento x largura do rosto", value: "Perto de 1:1, raramente mais de 1,3×" },
@@ -198,7 +198,7 @@ O peso influencia o quanto as bochechas parecem cheias, então emagrecer ou engo
   square: {
     name: "Quadrado",
     title: "Rosto quadrado: características, cortes e óculos",
-    description: "O rosto quadrado tem mandíbula forte e angular, com testa, maçãs e mandíbula de largura parecida. Veja como identificar e os cortes, óculos e barbas.",
+    description: "O rosto quadrado tem mandíbula forte e angular e testa, maçãs e mandíbula de largura parecida. Veja os cortes, óculos e barbas ideais.",
     definition: "O formato de rosto quadrado tem testa, maçãs do rosto e mandíbula de largura parecida, e uma linha da mandíbula forte e angular, com cantos definidos abaixo das orelhas. O rosto é apenas um pouco mais longo do que largo.",
     measurements: [
       { feature: "Comprimento x largura do rosto", value: "Cerca de 1–1,3× mais longo que largo" },
@@ -389,7 +389,7 @@ Se você não sabe se é oval ou oblongo, compare o comprimento com a largura. O
   rectangle: {
     name: "Retangular",
     title: "Rosto retangular: características e cortes",
-    description: "O rosto retangular é longo, com mandíbula forte e quadrada e laterais retas. Veja a diferença para o oblongo e os melhores cortes, óculos e barbas.",
+    description: "O rosto retangular é longo, com mandíbula forte e quadrada e laterais retas. Veja como difere do oblongo e os cortes, óculos e barbas ideais.",
     definition: "O formato de rosto retangular é mais longo do que largo, como o rosto oblongo, mas com uma mandíbula forte e angular. A testa, as maçãs do rosto e a mandíbula têm mais ou menos a mesma largura, as laterais são retas e a mandíbula tem cantos definidos.",
     measurements: [
       { feature: "Comprimento x largura do rosto", value: "Cerca de 1,6× ou mais" },

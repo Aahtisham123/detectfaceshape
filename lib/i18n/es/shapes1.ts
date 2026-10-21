@@ -4,7 +4,7 @@ export const shapesA: Record<string, ShapeT> = {
   oval: {
     name: "Ovalada",
     title: "Cara ovalada: rasgos, cortes de pelo y gafas",
-    description: "La cara ovalada mide 1,5 veces más de largo que de ancho, con los pómulos como zona más ancha. Cómo saberlo y los mejores cortes y gafas.",
+    description: "La cara ovalada es 1,5 veces más larga que ancha, con los pómulos como zona más ancha. Cómo saberlo y los mejores cortes y gafas.",
     definition: "Una cara ovalada es aproximadamente una vez y media más larga que ancha. Los pómulos son la parte más ancha, la frente es ligeramente más ancha que la mandíbula y la línea de la mandíbula se curva suavemente hacia un mentón redondeado, sin ángulos marcados.",
     measurements: [
       { feature: "Largo frente a ancho", value: "Entre 1,4 y 1,6 veces más larga que ancha" },
@@ -101,7 +101,7 @@ La diferencia está en el largo. Una cara ovalada es unas 1,5 veces más larga q
   round: {
     name: "Redonda",
     title: "Cara redonda: cómo saberlo, cortes y gafas",
-    description: "La cara redonda es casi tan ancha como larga, con mejillas llenas y mandíbula suave. Cómo saberlo y los peinados, gafas y barbas que más favorecen.",
+    description: "La cara redonda es casi tan ancha como larga, con mejillas llenas y mandíbula suave. Cómo saberlo y qué peinados, gafas y barbas te favorecen.",
     definition: "Una cara redonda es aproximadamente igual de ancha que de larga. Las mejillas son la parte más ancha y llena, la mandíbula es suave y sin esquinas visibles, y el mentón es redondeado. Como el ancho y el largo son parecidos, el contorno se parece a un círculo.",
     measurements: [
       { feature: "Largo frente a ancho", value: "Cerca de 1:1, rara vez más de 1,3 veces" },
@@ -198,7 +198,7 @@ El peso influye en lo llenas que se ven las mejillas, así que adelgazar o engor
   square: {
     name: "Cuadrada",
     title: "Cara cuadrada: rasgos, peinados, gafas y barba",
-    description: "La cara cuadrada tiene una mandíbula fuerte y angulosa, y frente, pómulos y mandíbula de ancho similar. Cómo saberlo y qué cortes y gafas elegir.",
+    description: "La cara cuadrada tiene mandíbula fuerte y angulosa, y frente, pómulos y mandíbula de ancho similar. Cómo saberlo y qué cortes y gafas elegir.",
     definition: "Una cara cuadrada tiene la frente, los pómulos y la mandíbula de aproximadamente el mismo ancho, y una mandíbula fuerte y angulosa con esquinas definidas debajo de las orejas. La cara es solo un poco más larga que ancha.",
     measurements: [
       { feature: "Largo frente a ancho", value: "Entre 1 y 1,3 veces más larga que ancha" },
@@ -389,7 +389,7 @@ Si no tienes claro si tu cara es ovalada o alargada, compara el largo con el anc
   rectangle: {
     name: "Rectangular",
     title: "Cara rectangular: rasgos, peinados y gafas",
-    description: "La cara rectangular es larga, con mandíbula fuerte y cuadrada y lados rectos. En qué se diferencia de la alargada y qué cortes, gafas y barbas elegir.",
+    description: "La cara rectangular es larga, con mandíbula cuadrada y lados rectos. En qué se diferencia de la alargada y qué cortes, gafas y barbas elegir.",
     definition: "Una cara rectangular es más larga que ancha, como la cara alargada, pero con una mandíbula fuerte y angulosa. La frente, los pómulos y la mandíbula tienen aproximadamente el mismo ancho, los lados son rectos y la mandíbula tiene esquinas definidas.",
     measurements: [
       { feature: "Largo frente a ancho", value: "Unas 1,6 veces o más" },

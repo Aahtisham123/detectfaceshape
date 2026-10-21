@@ -83,7 +83,7 @@ O teste depende da sua própria avaliação dos seus traços, o que é difícil.
 Salões, barbearias e óticas podem incorporar este teste gratuitamente. [Pegue o código de incorporação](#embed).`,
     faqs: [{ q: "Como descobrir o formato do meu rosto sem foto?", a: "Faça este teste olhando no espelho, ou meça seu rosto com uma fita métrica e use a calculadora de formato de rosto." }, { q: "O teste de formato de rosto é preciso?", a: "Ele é tão preciso quanto as suas respostas. Para um resultado medido, use também o detector por foto." }],
     title: "Teste de Formato de Rosto: Qual é o Meu?",
-    description: "Faça o teste de formato de rosto grátis e descubra seu formato sem foto: sete perguntas rápidas sobre testa, maçãs do rosto, mandíbula e queixo.",
+    description: "Faça o teste de formato de rosto grátis e descubra seu formato sem foto: 7 perguntas rápidas sobre testa, maçãs do rosto, mandíbula e queixo.",
   },
   "face-shape-calculator": {
     name: "Calculadora de Formato de Rosto",
@@ -178,7 +178,7 @@ Calombos no dorso (narizes romano e aquilino) ficam mais claros de perfil. Se o 
 A análise é feita inteiramente no seu navegador, com um modelo facial que roda no próprio dispositivo. Sua foto nunca é enviada, armazenada ou vista por ninguém, e nada é salvo quando você fecha a página. Leia nossa [política de privacidade](/privacy/) e [como nosso detector funciona](/how-it-works/).`,
     faqs: [{ q: "Como saber o formato do meu nariz?", a: "Use o detector com uma foto de frente e depois confira seu perfil no espelho para ver se há um calombo ou uma curva para dentro no dorso." }, { q: "Quais formatos de nariz existem?", a: "Grego, romano, núbio, aquilino, botão, arrebitado, celestial, carnudo e com calombo são os mais comuns." }],
     title: "Formato do Nariz: Qual é o Meu? Detector com IA",
-    description: "Descubra o formato do nariz por foto: grego, romano, núbio, aquilino, botão, arrebitado, celestial ou carnudo. Mede largura, comprimento e ponta.",
+    description: "Descubra o formato do nariz por foto: grego, romano, núbio, aquilino, botão, arrebitado, celestial ou carnudo. Mede largura, tamanho e ponta.",
   },
   "lip-shape-analyzer": {
     name: "Analisador de Formato dos Lábios",
@@ -209,7 +209,7 @@ Mantenha os lábios fechados e relaxados. Sorrir ou fazer biquinho muda todas as
 A análise é feita inteiramente no seu navegador, com um modelo facial que roda no próprio dispositivo. Sua foto nunca é enviada, armazenada ou vista por ninguém, e nada é salvo quando você fecha a página. Leia nossa [política de privacidade](/privacy/) e [como nosso detector funciona](/how-it-works/).`,
     faqs: [{ q: "Qual é a proporção ideal dos lábios?", a: "Um lábio inferior com cerca de 1,6× a altura do lábio superior costuma ser descrito como ideal." }, { q: "Devo sorrir na foto?", a: "Não. Mantenha os lábios fechados e relaxados." }],
     title: "Formato dos Lábios: Qual é o Meu? Teste Grátis",
-    description: "Formato dos lábios por foto: carnudos, finos, coração, arco, superior ou inferior cheio, largos, redondos ou caídos. Mede volume e arco do cupido.",
+    description: "Formato dos lábios por foto: carnudos, finos, coração, arco, superior ou inferior cheio, largos, redondos ou caídos. Mede volume e arco.",
   },
   "face-symmetry-test": {
     name: "Teste de Simetria Facial",
