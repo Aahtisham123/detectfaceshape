@@ -96,3 +96,13 @@ describe("skin color", () => {
     expect(hue(224, 180, 140)).toBeGreaterThan(hue(225, 170, 165));
   });
 });
+
+describe("face model download", () => {
+  test("progress sizes match the files we serve", async () => {
+    const { statSync } = await import("node:fs");
+    const { MODEL_BYTES } = await import("@/lib/face/landmarker");
+    expect(statSync("public/mediapipe/wasm/vision_wasm_internal.wasm").size).toBe(MODEL_BYTES.simd);
+    expect(statSync("public/mediapipe/wasm/vision_wasm_nosimd_internal.wasm").size).toBe(MODEL_BYTES.nosimd);
+    expect(statSync("public/models/face_landmarker.task").size).toBe(MODEL_BYTES.model);
+  });
+});

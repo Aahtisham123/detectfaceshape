@@ -201,11 +201,15 @@ main { outline: none; padding-bottom: 40px; }
 .stage.has-media { border-style: solid; border-color: transparent; background: #0f0d16; }
 .stage.dragging { border-color: var(--accent); background: var(--accent-soft); }
 .stage-canvas { display: block; max-height: 70vh; width: auto; margin: 0 auto; animation: fade 0.4s; }
+.stage-canvas[hidden] { display: none; }
 .stage-empty { text-align: center; padding: 36px 18px; color: var(--muted); }
 .stage-icon { color: var(--accent); animation: breathe 3s ease-in-out infinite; }
 .stage-hint { font-weight: 700; color: var(--text); font-size: 1.05rem; margin-bottom: 4px; }
 .stage-tip { font-size: 0.88rem; max-width: 440px; margin: 0 auto; }
 .stage-busy { position: absolute; left: 12px; right: 12px; bottom: 12px; background: rgba(15, 13, 22, 0.78); backdrop-filter: blur(6px); color: #fff; padding: 11px 14px; border-radius: 12px; display: flex; gap: 10px; align-items: center; justify-content: center; font-weight: 600; animation: rise 0.3s var(--ease); }
+.load-progress { display: flex; flex-direction: column; gap: 7px; min-width: 0; flex: 1; max-width: 320px; }
+.load-bar { display: block; height: 5px; border-radius: 99px; background: rgba(255, 255, 255, 0.2); overflow: hidden; }
+.load-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-bright), #fff); transform-origin: 0 50%; transition: transform 0.2s linear; }
 .scan-line { position: absolute; left: 0; right: 0; height: 90px; top: -90px; background: linear-gradient(180deg, transparent, rgba(185, 156, 240, 0.35) 80%, #b99cf0); animation: scan 1.6s ease-in-out infinite; pointer-events: none; }
 .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255, 255, 255, 0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
 .live { position: relative; width: 100%; }

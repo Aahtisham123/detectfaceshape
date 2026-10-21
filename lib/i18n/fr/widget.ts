@@ -188,6 +188,7 @@ export const widget: Dict = {
   "Light-medium": "Claire à moyenne",
   "Likely range: {from}–{to}": "Fourchette probable : {from}–{to}",
   "Loading the face model (first time only)…": "Chargement du modèle facial (la première fois seulement)…",
+  "Loading the AI model… {n}%": "Chargement du modèle d’IA… {n} %",
   "Long and broad": "Longs et larges",
   "Long and narrow": "Longs et fins",
   "Look for": "À rechercher",

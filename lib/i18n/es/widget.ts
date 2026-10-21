@@ -100,6 +100,7 @@ export const widget: Dict = {
   "Face rating (for fun)": "Puntuación facial (por diversión)",
   "Length is measured from the top of the face model (just below the hairline) to the chin, so these ratios are a little lower than tape-measure ratios.": "El largo se mide desde la parte superior del modelo facial (justo debajo de la línea del cabello) hasta el mentón, así que estas proporciones son algo menores que con cinta métrica.",
   "Loading the face model (first time only)…": "Cargando el modelo facial (solo la primera vez)…",
+  "Loading the AI model… {n}%": "Cargando el modelo de IA… {n} %",
   "Measuring 478 points on your face…": "Midiendo 478 puntos de tu rostro…",
   "Please choose an image file (JPG, PNG, WebP or HEIC).": "Elige un archivo de imagen (JPG, PNG, WebP o HEIC).",
   "Forehead width": "Ancho de la frente",

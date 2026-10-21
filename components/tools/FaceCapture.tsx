@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { getLandmarker, setMode } from "@/lib/face/landmarker";
+import { getLandmarker, isLandmarkerReady, onLoadProgress, preloadLandmarker, setMode } from "@/lib/face/landmarker";
 import { normalizeFace, type FaceFrame } from "@/lib/face/normalize";
 import { drawOverlay, GUIDES } from "@/lib/face/draw";
 import { Icon } from "@/components/icons";
@@ -32,9 +32,13 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   const [result, setResult] = useState<R | null>(null);
   const [label, setLabel] = useState("");
   const [dragging, setDragging] = useState(false);
+  // A photo is drawn on the canvas (shown behind the progress bar while the model finishes loading).
+  const [hasPhoto, setHasPhoto] = useState(false);
   // Buttons stay disabled until hydration, so an early tap on a slow phone is never silently ignored.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => onLoadProgress(setProgress), []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
@@ -51,6 +55,28 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
 
   useEffect(() => stopCamera, [stopCamera]);
 
+  // Download the face model in the background once the tool is on screen and the page is idle,
+  // so it is usually ready before the visitor has picked a photo.
+  const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let idle = 0;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+      idle = w.requestIdleCallback ? w.requestIdleCallback(preloadLandmarker, { timeout: 2500 }) : window.setTimeout(preloadLandmarker, 1200);
+    }, { rootMargin: "200px" });
+    io.observe(stage);
+    return () => {
+      io.disconnect();
+      const w = window as Window & { cancelIdleCallback?: (id: number) => void };
+      if (w.cancelIdleCallback) w.cancelIdleCallback(idle);
+      else clearTimeout(idle);
+    };
+  }, []);
+
   useEffect(() => {
     if (status === "done") resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [status]);
@@ -65,9 +91,11 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   /** Runs the landmark model on whatever is drawn on the main canvas. */
   const runOnCanvas = async () => {
     const canvas = canvasRef.current!;
-    setStatus("analyzing");
+    // Only say "measuring" once the model is actually here; until then show download progress.
+    setStatus(isLandmarkerReady() ? "analyzing" : "loading");
     try {
       const lm = await getLandmarker();
+      setStatus("analyzing");
       await setMode(lm, "IMAGE");
       const res = lm.detect(canvas);
       const raw = res.faceLandmarks[0] as Raw | undefined;
@@ -99,6 +127,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
       canvas.height = Math.round(bitmap.height * scale);
       canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
       bitmap.close();
+      setHasPhoto(true);
       await runOnCanvas();
     } catch {
       fail(t("That image couldn't be opened. Try a JPG or PNG."));
@@ -106,6 +135,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   };
 
   const startCamera = async () => {
+    setHasPhoto(false);
     setError("");
     setStatus("loading");
     try {
@@ -163,17 +193,19 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
   const reset = () => {
     stopCamera();
     setResult(null);
+    setHasPhoto(false);
     setStatus("idle");
     setError("");
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const showCanvas = status === "analyzing" || status === "done";
+  const showCanvas = status === "analyzing" || status === "done" || (status === "loading" && hasPhoto);
 
   return (
     <div className="capture">
       {title && <h2 className="capture-title">{title}</h2>}
       <div
+        ref={stageRef}
         className={`stage${dragging ? " dragging" : ""}${showCanvas || status === "live" ? " has-media" : ""}`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -192,7 +224,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
           <canvas ref={overlayRef} className="mirror overlay" />
           {label && <div className="live-label">{label}</div>}
         </div>
-        {(status === "idle" || status === "error" || status === "loading") && (
+        {(status === "idle" || status === "error" || (status === "loading" && !hasPhoto)) && (
           <div className="stage-empty">
             <FaceIcon />
             <p className="stage-hint">{t("Drop a photo here, upload one, or use your camera.")}</p>
@@ -202,7 +234,15 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
         {status === "analyzing" && <div className="scan-line" aria-hidden="true" />}
         {(status === "loading" || status === "analyzing") && (
           <div className="stage-busy" role="status">
-            <span className="spinner" /> {t(status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…")}
+            <span className="spinner" />
+            {status === "loading" && !isLandmarkerReady() ? (
+              <span className="load-progress">
+                {t("Loading the AI model… {n}%", { n: Math.round(progress * 100) })}
+                <span className="load-bar" aria-hidden="true"><span style={{ transform: `scaleX(${progress})` }} /></span>
+              </span>
+            ) : (
+              t(status === "loading" ? "Loading the face model (first time only)…" : "Measuring 478 points on your face…")
+            )}
           </div>
         )}
       </div>
@@ -217,7 +257,7 @@ export default function FaceCapture<R>({ analyze, render, liveLabel, guide = "fa
           <button className="btn" onClick={reset}><Icon name="RotateCcw" size={18} /> {t("Try another photo")}</button>
         ) : (
           <>
-            <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={!ready || status === "loading" || status === "analyzing"}>
+            <button className="btn primary" onClick={() => { getLandmarker().catch(() => {}); fileRef.current?.click(); }} disabled={!ready || status === "loading" || status === "analyzing"}>
               <Icon name="Upload" size={18} /> {t("Upload a photo")}
             </button>
             <button className="btn" onClick={startCamera} disabled={!ready || status === "loading" || status === "analyzing"}>
