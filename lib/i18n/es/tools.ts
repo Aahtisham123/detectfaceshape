@@ -490,7 +490,7 @@ Responde según tu color de pelo natural, sin maquillaje y con luz natural. Una 
       { q: "¿Puede cambiar mi estación?", a: "Tu colorido natural es estable, pero el pelo teñido o el bronceado pueden cambiar durante un tiempo qué colores te quedan mejor." },
     ],
     title: "Análisis de color: ¿qué estación soy? (test)",
-    description: "Descubre tu paleta (Primavera, Verano, Otoño o Invierno y tu subestación) con un test de análisis de color según subtono, profundidad y contraste.",
+    description: "Descubre tu paleta (Primavera, Verano, Otoño o Invierno y tu subestación) con un test de análisis de color: subtono, profundidad, contraste.",
   },
   "foundation-shade-finder": {
     name: "Buscador de tono de base",

@@ -4,7 +4,7 @@ import type { LocaleContent } from "../types";
 export const hub: LocaleContent["hub"] = {
   title: "Formas de cara: tabla de los 10 tipos",
   description:
-    "Las 10 formas de cara en una tabla: ovalada, redonda, cuadrada, alargada, rectangular, corazón, diamante, triangular, triángulo invertido y pera.",
+    "Las 10 formas de cara en tabla: ovalada, redonda, cuadrada, alargada, rectangular, corazón, diamante, triangular, triángulo invertido y pera.",
   h1: "Formas de cara: los 10 tipos explicados",
   intro:
     "Hay 10 formas de cara principales: ovalada, redonda, cuadrada, alargada, rectangular, corazón, diamante, triangular, triángulo invertido y pera. Tu forma de cara depende de tres anchos (frente, pómulos y mandíbula), del largo de tu rostro y de si tu mandíbula es angulosa o suave. La mayoría de las personas combina dos formas.",
