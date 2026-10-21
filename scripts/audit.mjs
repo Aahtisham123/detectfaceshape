@@ -17,8 +17,17 @@ async function check(url, kind = "page") {
   return p;
 }
 
-const sitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
-const queue = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(ORIGIN, BASE));
+// Sitemap index → one sitemap per content type → page URLs.
+const locs = (xml) => [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(ORIGIN, BASE));
+const index = await (await fetch(`${BASE}/sitemap_index.xml`)).text();
+const queue = [];
+for (const sm of locs(index)) {
+  const r = await fetch(sm);
+  if (r.status !== 200) { report(sm, `sitemap HTTP ${r.status}`); continue; }
+  queue.push(...locs(await r.text()));
+}
+const dupes = queue.filter((u, i) => queue.indexOf(u) !== i);
+if (dupes.length) report(BASE, `URLs listed in more than one sitemap: ${dupes.join(", ")}`);
 const seen = new Set(queue);
 const attr = (tag, name) => new RegExp(`${name}="([^"]*)"`).exec(tag)?.[1];
 

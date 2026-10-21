@@ -35,7 +35,8 @@ Node 20.9+ is required.
 | `lib/quizLogic.ts` | Pure scoring for the face shape calculator, Kibbe test and color seasons |
 | `app/(site)/` | Pages: `/`, `/[tool or hub]/`, `/[hub]/[type]/`, `/face-shapes/…`, `/blog/…`, about, methodology, privacy, author |
 | `app/(embed)/embed/face-shape-quiz/` | Embeddable quiz widget (noindex, attribution link) |
-| `app/sitemap.ts`, `app/robots.ts` | Sitemap (with image entries) and robots |
+| `lib/sitemaps.ts`, `app/*-sitemap.xml/` | Yoast-style sitemaps: `/sitemap_index.xml` links page, tool, face-shape, guide and post sitemaps (with hreflang and image entries), styled for browsers by `/main-sitemap.xsl`. `/sitemap.xml` redirects to the index |
+| `app/robots.ts` | robots.txt (points to the sitemap index) |
 | `public/models/` | Face landmarker and age models, self-hosted |
 | `lib/seo.ts` | **Every page's title (≤ 50 chars), meta description (≤ 143), section and image.** Metadata, search, sitemap and OG images all read from it; `tests/seo.test.ts` enforces the limits |
 | `lib/graphics/svg.ts` + `scripts/build-images.mts` | Original vector illustrations (face, eye, nose, lip, head, jaw types, hero, logo) rendered to compressed WebP in `public/images/`, plus favicon.ico / PNG app icons |
@@ -89,7 +90,7 @@ Designed for Vercel (or any Next.js host):
 1. Import the repo; the default build command works. The site's public origin defaults to `https://detectfaceshape.cc` (canonicals, sitemap, robots.txt, JSON-LD, OG images); set `NEXT_PUBLIC_SITE_URL` only to override it. Preview deployments are sent `X-Robots-Tag: noindex`.
 2. Add `detectfaceshape.cc` as the primary domain and redirect `www` to it at the domain level. `next.config.ts` also redirects `www`.
 3. Production deploys from `main`. Commits must be authored with an email on the GitHub account linked to the Vercel account (here `ahtipazeer@gmail.com`); on the Hobby plan Vercel skips pushes from unknown authors. If a push doesn't deploy, use **Deployments → Create Deployment** with branch `main`.
-4. Submit `https://detectfaceshape.cc/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
+4. Submit `https://detectfaceshape.cc/sitemap_index.xml` in Google Search Console and Bing Webmaster Tools.
 
 ## Before launch
 

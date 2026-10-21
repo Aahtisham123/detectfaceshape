@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   async redirects() {
     return [
+      // Yoast-style sitemap index; keep the conventional URL working.
+      { source: "/sitemap.xml", destination: "/sitemap_index.xml", permanent: true },
       // One canonical host: non-www.
       {
         source: "/:path*",
